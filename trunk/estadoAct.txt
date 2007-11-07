@@ -1,0 +1,32 @@
+Estado de la red
+
+Numero de nodos: 4
+
+Informacion del nodo 0
+Nombre: Cynthia
+Conexiones directas con 
+Lista Negra: Ricardo, 
+Atributos:
+
+
+Informacion del nodo 1
+Nombre: Ricardo
+Conexiones directas con 
+Lista Negra: 
+Atributos:
+
+
+Informacion del nodo 2
+Nombre: Angel
+Conexiones directas con 
+Lista Negra: 
+Atributos:
+
+
+Informacion del nodo 3
+Nombre: Guillermo
+Conexiones directas con Daniel, 
+Lista Negra: 
+Atributos:
+
+
