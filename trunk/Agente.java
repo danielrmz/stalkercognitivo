@@ -11,7 +11,7 @@ import org.jgrapht.graph.*;
 
 /**
  * Agente Inteligente
- * @author Equipo 6
+ * @author Equipo 6 ee
  */
 public class Agente {
 	protected Grafo graph;
