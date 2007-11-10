@@ -1,32 +1,4 @@
-Estado de la red
-
-Numero de nodos: 4
-
-Informacion del nodo 0
-Nombre: Cynthia
-Conexiones directas con 
-Lista Negra: Ricardo, 
-Atributos:
-
-
-Informacion del nodo 1
-Nombre: Ricardo
-Conexiones directas con Guillermo, 
-Lista Negra: 
-Atributos:
-
-
-Informacion del nodo 2
-Nombre: Angel
-Conexiones directas con 
-Lista Negra: 
-Atributos:
-
-
-Informacion del nodo 3
-Nombre: Guillermo
-Conexiones directas con Ricardo, 
-Lista Negra: 
-Atributos:
-
-
+Ricardo/Angel/Guillermo/Pedro/Damaris/Leonidas/Marin/Daniel/Cynthia/
+Cynthia, Pedro, /Cynthia, Pedro, /Daniel, /Ricardo, Angel, Damaris, Leonidas, /Pedro, Leonidas, /Marin, Damaris, Pedro, /Leonidas, /Cynthia, Guillermo, /Daniel, Ricardo, Angel, /
+////////Angel, /
+Comida Spicy,28.508312,0.0, Comida China,93.56883,0.0, Soccer,42.42877,0.0, /Comida Spicy,90.45314,0.0, Comida China,56.20157,0.0, Soccer,66.95186,0.0, /Comida Spicy,42.428654,0.0, Comida China,90.05075,0.0, Soccer,54.550827,0.0, /Comida Spicy,48.834034,0.0, Comida China,20.878065,0.0, Soccer,70.88299,0.0, /Comida Spicy,33.50264,0.0, Comida China,60.710762,0.0, Soccer,97.955055,0.0, /Comida Spicy,27.157866,0.0, Comida China,47.396534,0.0, Soccer,60.06611,0.0, /Comida Spicy,18.35504,0.0, Comida China,29.918997,0.0, Soccer,16.414888,0.0, /Comida Spicy,73.04989,0.0, Comida China,54.335167,0.0, Soccer,9.104657,0.0, /Comida Spicy,32.835155,0.0, Comida China,25.394651,0.0, Soccer,18.342876,0.0, /
