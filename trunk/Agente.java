@@ -42,6 +42,8 @@ public class Agente {
 		Persona damaris = new Persona("Damaris");
 		Persona leo 	= new Persona("Leonidas");
 		Persona marin 	= new Persona("Marin");
+		Persona daniel = new Persona("Daniel");
+		Persona cynthia = new Persona("Cynthia");
 		
 		for(Persona persona : Persona.personas){
 			persona.setAttribute("Comida Spicy", (float)(Math.random()*100));
@@ -49,29 +51,44 @@ public class Agente {
 			persona.setAttribute("Soccer", (float)(Math.random()*100));
 		}
 		
-		x.graph.g.addEdge(daniel, cynthia);
-		x.graph.g.addEdge(cynthia, ricardo);
-		x.graph.g.addEdge(cynthia, angel);
-		x.graph.g.addEdge(daniel, memo);
-		x.graph.g.addEdge(ricardo, pedro);
-		x.graph.g.addEdge(angel, pedro);
-		x.graph.g.addEdge(pedro, damaris);
-		x.graph.g.addEdge(leo, marin);
-		x.graph.g.addEdge(damaris,leo);
-		x.graph.g.addEdge(pedro, leo);
-		
+		daniel.agregaAmigo(cynthia);
+		//x.graph.g.addEdge(daniel, cynthia);
+		cynthia.agregaAmigo(ricardo);
+		//x.graph.g.addEdge(cynthia, ricardo);
+		cynthia.agregaAmigo(angel);
+		//x.graph.g.addEdge(cynthia, angel);
+		daniel.agregaAmigo(memo);
+		//x.graph.g.addEdge(daniel, memo);
+		ricardo.agregaAmigo(pedro);
+		//x.graph.g.addEdge(ricardo, pedro);
+		angel.agregaAmigo(pedro);
+		//x.graph.g.addEdge(angel, pedro);
+		pedro.agregaAmigo(damaris);
+		//x.graph.g.addEdge(pedro, damaris);
+		leo.agregaAmigo(marin);
+		//x.graph.g.addEdge(leo, marin);
+		damaris.agregaAmigo(leo);
+		//x.graph.g.addEdge(damaris,leo);
+		pedro.agregaAmigo(leo);
+		//x.graph.g.addEdge(pedro, leo);
+		cynthia.agregaEnemigo(angel);
 	}
 	
 	//-- Main
 	public static void main(String[] args) {
 		Agente.ag = new Agente();
-		daniel = new Persona("Daniel");
-		cynthia = new Persona("Cynthia");
 		defaults(Agente.ag);
 		System.out.println("Inicial: "+Agente.ag.graph.g.toString());
 		//Agente.ag.buscarAmigos(Persona.personas.getFirst());
-		Agente.ag.eliminaConexion(daniel, cynthia);
+		
 		System.out.println("Final: "+Agente.ag.graph.g.toString());
+		try{
+		guardaInformacion();
+		}
+		catch(IOException io){
+		   io.toString();	
+		
+		}
 	}
 	
 	//-- Constructor
@@ -198,20 +215,42 @@ public class Agente {
 	public static void guardaInformacion() throws IOException{
 		
 		PrintWriter salida = new PrintWriter(new FileWriter("estadoAct.txt"));
+		//BufferedReader ent = new BufferedReader(new FileReader("estadoAct.txt"));
 		
-		salida.println("Estado de la red");
-		salida.print("\n");
-		salida.println("Numero de nodos: "+Persona.personas.size()+"\n");
+		
 		
 		for(int i=0; i<Persona.personas.size(); i++){
 		      
-			 salida.println("Informacion del nodo "+i);
-			 salida.println("Nombre: "+Persona.personas.get(i).getNombre());
-			 salida.println("Conexiones directas con "+Persona.personas.get(i).wlToString());
-		     salida.println("Lista Negra: "+Persona.personas.get(i).blToString());
-		     salida.println("Atributos:"+Persona.personas.get(i).atrToString());
-		     salida.println("\n");
+		
+			 salida.print(Persona.personas.get(i).getNombre()+"/");
+			 salida.flush();
+			
 		}
+		salida.println();
+		
+		for(int i=0; i<Persona.personas.size(); i++){
+		      
+			
+			 salida.print(Persona.personas.get(i).wlToString()+"/");
+			 salida.flush();
+			
+		}
+		salida.println();
+		for(int i=0; i<Persona.personas.size(); i++){
+		      
+			
+			 salida.print(Persona.personas.get(i).blToString()+"/");
+			 salida.flush();
+			
+		}
+		salida.println();
+		for(int i=0; i<Persona.personas.size(); i++){
+		      
+			
+			 salida.print(Persona.personas.get(i).atrToString()+"/");
+			
+		}
+		
 		
 		salida.close();
 		

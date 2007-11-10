@@ -120,29 +120,11 @@ public class Persona {
 	}
 	
 	public void agregaAmigo(Persona amigo){
-		if(conexiones.size()==0){
-		   conexiones.addFirst(amigo);
-		   if(amigo.conexiones.size()==0){
-			  amigo.conexiones.addFirst(this); 
-			 }
-		   else{
-			  amigo.conexiones.add(this);
-		   }
-		   Agente.ag.graph.g.addEdge(this,amigo);
-		   Agente.ag.graph.g.addEdge(amigo,this);
-		   
-		}
-		else{
-			conexiones.add(amigo);
-			  if(amigo.conexiones.size()==0){
-				  amigo.conexiones.addFirst(this); 
-				 }
-			   else{
-				  amigo.conexiones.add(this);
-			   }
-			Agente.ag.graph.g.addEdge(this,amigo);
-		    Agente.ag.graph.g.addEdge(amigo,this);
-		}
+		conexiones.addLast(amigo);
+		amigo.conexiones.addLast(this);
+		Agente.ag.graph.g.addEdge(this,amigo);
+		
+	
 	}
 	
 	public void removeAmigo(Persona amigo){
@@ -258,8 +240,10 @@ public class Persona {
 		}
 		
 		public String toString(){
-			return "Atributo: "+this.name+", peso: "+this.weight+", probabilidad: "+this.popularity+"\n";
+			return (""+this.name+","+this.weight+","+this.popularity);
 		}
+		
+	
 	}
 	
 }
