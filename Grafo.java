@@ -6,13 +6,19 @@ import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
 /**
- * Encapsulador del objeto de grafo y su grafica
- * @author daniel
+ * Encapsulador del objeto de grafo y su grafica, 
+ * TODO: Establecer un poco mas de abstraccion de datos en esta parte.
+ * @author Equipo 6
  *
  */
 public class Grafo {
+	///-- Grafo que puede ser manipulado
 	public ListenableGraph<Persona,DefaultEdge> g;
+	
+	//-- Adaptador de datos
 	public JGraphModelAdapter adapter = null;
+	
+	//-- Adaptador de display.
 	public JGraph display;
 	
 	public Grafo(Dimension graphSize){
@@ -27,16 +33,7 @@ public class Grafo {
 	}
 	
 	public void construyeGrafo(String filename){
-		//-- Leer archivo
-		
-		//-- Agregar Personas
-		//-- p.addPerson();
-		//-- Agregar atributos a personas
-		//-- p.addAttribute();
-		
-		//-- Agregar Relaciones
-		//-- this.g.addEdge(p1, p2);
-		
+	
 	}
 	
 }

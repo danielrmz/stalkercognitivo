@@ -12,12 +12,21 @@ public class Persona {
 	//-- Listado de Personas en el sistema
 	public static LinkedList<Persona> personas = new LinkedList<Persona>();
 	
+	//-- Id de la perosna
 	private int id = 0;
+	
+	//-- NOmbre de la persona
 	private String nombre = "";
+	
+	//-- Atributos con los que cuenta
 	private LinkedList<PersonaAtributo> atributos = new LinkedList<PersonaAtributo>();
+	
+	//-- Listas de conexiones personalizadas, aparte de las del grafo. para manipulacion interna.
 	private LinkedList<Persona> blacklist = new LinkedList<Persona>();
 	private LinkedList<Persona> conexiones = new LinkedList<Persona>();
 	
+	
+	//-- Constructor
 	public Persona(String nombre){
 		this.nombre = nombre;
 		Persona.personas.addLast(this);
@@ -25,6 +34,9 @@ public class Persona {
 		Agente.ag.graph.g.addVertex(this);
 	}
 	
+	//-----
+	//-- Funciones de Exists
+	//-----
 	public boolean esEnemigo(Persona p){
 		for(Persona a : this.blacklist){
 			if(a.equals(p)){
@@ -43,6 +55,9 @@ public class Persona {
 		return false;
 	}
 	
+	//---- 
+	//-- Funciones de Output
+	//----
 	public String blToString(){
 	    String elem="";
 	    
@@ -73,7 +88,9 @@ public class Persona {
 		 return elem;
 	}
 	
-	
+	//-----
+	//-- Funciones de updates
+	//-----
 	
 	public void agregaEnemigo(Persona enemigo){
 		if (blacklist.size()==0){
@@ -106,6 +123,10 @@ public class Persona {
 		conexiones.remove(amigo);
 	}
 	
+	
+	//----
+	//-- Funciones de gets.
+	//----
 	public Persona getAmigo(int id){
 		return this.conexiones.get(id);
 	}
@@ -166,7 +187,9 @@ public class Persona {
 	}
 	
 	/***
-	 * Clase del Atributo de una persona
+	 * Clase del Atributo de una persona, con detalles mas especificos que el atributo general
+	 * tales como la probabilidad de que aparezca, y el peso que tiene el usuario sobre
+	 * un determinado atributo
 	 */
 	public class PersonaAtributo extends Atributo {
 		private float weight = 0;

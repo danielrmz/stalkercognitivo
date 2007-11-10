@@ -5,7 +5,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-
+/**
+ * Frame Beta
+ *
+ */
 public class SCFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -22,10 +25,6 @@ public class SCFrame extends JFrame {
 	private JMenuItem jMenuItem1;
 	private JMenu jMenu1;
 
-	
-	//-- AGENTE
-	private Agente agente;
-	
 	/**
 	* Auto-generated main method to display this JFrame
 	*/
