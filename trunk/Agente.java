@@ -128,6 +128,8 @@ public class Agente {
 	
 
 	//-- Realiza la conexion en base a las caracteristicasy pesos que tiene cada uno
+	//-- funcion core donde se plasma el aumento de experiencia y creacion de relaciones
+	//-- entre usuarios
 	public boolean realizaConexion(Persona a, Persona b){
 		//se comparan los atributos y se modifica el grafo
 		boolean sw = false;

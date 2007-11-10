@@ -1,8 +1,9 @@
 import java.util.*;
 
 /**
- * Encapsuladora de los atributos 
- * de las personas y sus pesos
+ * Encapsuladora de los atributos en general
+ * Administra los atributos en el sistema actualmente
+ * y sus datos.
  * @author Equipo 6
  */
 public class Atributo {
