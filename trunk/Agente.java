@@ -84,7 +84,8 @@ public class Agente {
 		this.graph.construyeGrafo(filename);
 	}
 	
-	public JGraph getGraph(){ //Esto no iria en grafo?
+	//-- Trae la grafica, esto es solo una interfaz para no usar el acceso directo y encapuslar mas cosas aqui probablemente.
+	public JGraph getGraph(){ 
 	       return this.graph.display;
 	}
 	
