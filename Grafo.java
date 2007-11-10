@@ -1,3 +1,5 @@
+import java.awt.Dimension;
+
 import org.jgraph.*;
 import org.jgrapht.*;
 import org.jgrapht.ext.*;
@@ -13,10 +15,11 @@ public class Grafo {
 	public JGraphModelAdapter adapter = null;
 	public JGraph display;
 	
-	public Grafo(){
+	public Grafo(Dimension graphSize){
 		this.g = new ListenableUndirectedWeightedGraph<Persona , DefaultEdge>(DefaultEdge.class);
 		this.adapter = new JGraphModelAdapter<Persona,DefaultEdge>(this.g);
 		this.display = new JGraph( this.adapter );
+		this.display.setSize(graphSize);
 	}
 	
 	public void exportaGrafo(){

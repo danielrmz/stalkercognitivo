@@ -1,6 +1,8 @@
 import java.io.*;
 import java.util.*;
 
+import org.jgrapht.alg.NeighborIndex;
+
 /**
  * Encapsuladora de los datos de una persona
  * @author Equipo 6
@@ -20,7 +22,7 @@ public class Persona {
 		this.nombre = nombre;
 		Persona.personas.addLast(this);
 		this.id = Persona.personas.indexOf(this);
-		
+		Agente.ag.graph.g.addVertex(this);
 	}
 	
 	public boolean esEnemigo(Persona p){
@@ -124,9 +126,9 @@ public class Persona {
 		this.nombre = nombre;
 	}
 	
-	public PersonaAtributo getAtributo(int id){
+	public PersonaAtributo getAtributo(String attribute){
 		for(PersonaAtributo atributo : this.atributos ){
-			if(atributo.getID() == id){
+			if(atributo.getName().equals(attribute)){
 				
 				return atributo;
 			}
@@ -134,16 +136,33 @@ public class Persona {
 		return null;
 	}
 	
-	public void setAttribute(int id, float weight){
-		PersonaAtributo at = new PersonaAtributo(id, weight);
+	
+	public void setAttribute(String attrib, float weight){
+		PersonaAtributo at = new PersonaAtributo(attrib, weight);
 		this.atributos.add(at);
 	}
 	
 	public String toString(){
+		String attribs = "";
+		for(PersonaAtributo atrib : this.atributos){
+			attribs+=atrib.toString();
+		}
+		
+		//return this.nombre+"\n"+attribs+"-----------------";
 		return this.nombre;
 	}
 	
-
+	public Persona[] getAmigos(){
+		NeighborIndex ni = new NeighborIndex(Agente.ag.graph.g);
+		Object[] vecinos = ni.neighborsOf(this).toArray();
+		int i = 0;
+		Persona[] amigos = new Persona[vecinos.length];
+		for(Object persona : vecinos){
+			amigos[i] = (Persona)persona;
+			i++;
+		}
+		return amigos;
+	}
 /**
 	public void cargaDatos(String nombre) throws Exception {//abre metodo
 
@@ -227,21 +246,16 @@ public class Persona {
 	public class PersonaAtributo extends Atributo {
 		private float weight = 0;
 		
-		public PersonaAtributo(int id, float weight){
-			this.id = id;
+		public PersonaAtributo(String name, float weight){
+			this.name = name;
 			this.weight = weight;
+			if(!super.exists(name)){
+				new Atributo(name);
+			}
 		}
 		
 		public float getWeight(){
 			return this.weight;
-		}
-		
-		public int getID(){
-			return this.id;
-		}
-		
-		public void setID(int id){
-			this.id = id;
 		}
 		
 		public void setWeight(float weight){
@@ -250,11 +264,15 @@ public class Persona {
 		
 		public Atributo getInformation(){
 			for(Atributo atributo :  Atributo.atributos){
-				if(atributo.getId() == this.getID()){
+				if(atributo.getName().equals(this.getName())){
 					return atributo;
 				}
 			}
 			return null;
+		}
+		
+		public String toString(){
+			return "Atributo: "+this.name+", peso: "+this.weight+"\n";
 		}
 	}
 	
