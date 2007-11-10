@@ -150,6 +150,7 @@ public class Persona {
 		
 		//return this.nombre+"\n"+attribs+"-----------------";
 		return this.nombre;
+		
 	}
 	
 	public Persona[] getAmigos(){
@@ -163,88 +164,16 @@ public class Persona {
 		}
 		return amigos;
 	}
-/**
-	public void cargaDatos(String nombre) throws Exception {//abre metodo
-
-		BufferedReader ent = new BufferedReader (new FileReader(nombre));
-//	 BufferedReader def = new BufferedReader (new FileReader("def.txt"));	
-//		BufferedReader atr = new BufferedReader (new FileReader("attr.txt"));
-		
-		
-		String x=ent.readLine();
-				while(x!=null){//cierra while
-				  
-				  switch(countLines){//abre switch			  
-				   case 1: 
-				   BufferedReader def = new BufferedReader (new FileReader("nodos.txt"));	
-					String y=def.readLine();
-						while(y!=null) { //abre while
-						
-							if(x.charAt(0)==y.charAt(0)){
-								setNombre(y.substring(2, y.length()));
-								y=def.readLine();
-								countLines++;					
-														}
-							else{
-							  	y=def.readLine();
-							}
-							
-				  
-				  } //cierra while
-				  def.close();
-				  	
-				  
-				  break;
-				  case 2:
-				  
-				  StringTokenizer st=new StringTokenizer(x,"|");
-				         int i=0;
-				  			while(st.hasMoreTokens()){
-					     	
-							if(i==0){
-							  cDirecta.addFirst(st.nextToken());
-							  i++;
-							}
-						   else{
-							  cDirecta.add(i, st.nextToken());
-							  i++;
-							  }
-								 
-						}
-						countLines++;
-						
-						break;
-				case 3:
-				 StringTokenizer st2=new StringTokenizer(x,"|");
-				         int z=0;
-				  			while(st2.hasMoreTokens()){
-					     	
-							if(z==0){
-							  blacklist.addFirst(st2.nextToken());
-							  z++;
-							}
-						   else{
-							  blacklist.add(z, st2.nextToken());
-							  z++;
-							  }
-								 
-						}
-						countLines++;
-						x=ent.readLine();
-						break;
-
-			   } //cierra switch
-				x=ent.readLine();   
-			}//cierra while
-	      ent.close();
-		}//cierra metodo
-	**/
 	
 	/***
 	 * Clase del Atributo de una persona
 	 */
 	public class PersonaAtributo extends Atributo {
 		private float weight = 0;
+		/**
+		 * Probabilidad de popularidad que ha salido entre los amigos.
+		 */
+		private float popularity = 0;
 		
 		public PersonaAtributo(String name, float weight){
 			this.name = name;
@@ -252,6 +181,14 @@ public class Persona {
 			if(!super.exists(name)){
 				new Atributo(name);
 			}
+		}
+		
+		public void setPopularity(float pop){
+			this.popularity = pop;
+		}
+		
+		public float getPopularity(){
+			return this.popularity;
 		}
 		
 		public float getWeight(){
@@ -272,7 +209,7 @@ public class Persona {
 		}
 		
 		public String toString(){
-			return "Atributo: "+this.name+", peso: "+this.weight+"\n";
+			return "Atributo: "+this.name+", peso: "+this.weight+", probabilidad: "+this.popularity+"\n";
 		}
 	}
 	
