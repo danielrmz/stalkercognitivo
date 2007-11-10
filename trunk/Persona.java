@@ -122,9 +122,26 @@ public class Persona {
 	public void agregaAmigo(Persona amigo){
 		if(conexiones.size()==0){
 		   conexiones.addFirst(amigo);
+		   if(amigo.conexiones.size()==0){
+			  amigo.conexiones.addFirst(this); 
+			 }
+		   else{
+			  amigo.conexiones.add(this);
+		   }
+		   Agente.ag.graph.g.addEdge(this,amigo);
+		   Agente.ag.graph.g.addEdge(amigo,this);
+		   
 		}
 		else{
 			conexiones.add(amigo);
+			  if(amigo.conexiones.size()==0){
+				  amigo.conexiones.addFirst(this); 
+				 }
+			   else{
+				  amigo.conexiones.add(this);
+			   }
+			Agente.ag.graph.g.addEdge(this,amigo);
+		    Agente.ag.graph.g.addEdge(amigo,this);
 		}
 	}
 	
