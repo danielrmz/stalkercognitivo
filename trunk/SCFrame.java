@@ -6,18 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
 public class SCFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -44,16 +32,24 @@ public class SCFrame extends JFrame {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				Agente.ag = new Agente();
+				Agente.defaults(Agente.ag);
+				System.out.println(Agente.ag.getGraph());
+				System.out.println(Agente.ag.graph.g.toString());
+				
 				SCFrame inst = new SCFrame();
 				inst.setLocationRelativeTo(null);
 				inst.setVisible(true);
+				
+				
 			}
 		});
+		
+		
 	}
 	
 	public SCFrame() {
 		super();
-		this.agente = new Agente();
 		initGUI();
 	}
 	
@@ -90,8 +86,8 @@ public class SCFrame extends JFrame {
 					jPanel1.add(jPanel2, BorderLayout.CENTER);
 					{
 						pnlGraph = new JPanel();
-						pnlGraph.add(this.agente.getGraph());
-						pnlGraph.setSize(new Dimension( 530, 420 ));
+						pnlGraph.add(Agente.ag.getGraph());
+						pnlGraph.setSize(new Dimension( 730, 620 ));
 						jPanel2.add(pnlGraph, BorderLayout.CENTER);
 						{
 							jLabel_IL = new JLabel("x");

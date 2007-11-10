@@ -12,20 +12,29 @@ import sun.misc.Queue;
 
 
 /**
- * Agente Inteligente
+ * Agente Inteligente. 
+ * El principal proposito de esta clase es buscar a los amigos
+ * cuyo indice de probabilidad entre atributos al compararlos sea similar.
+ * Asimismo proveer de una interfaz para la obtencion del grafo que se contiene en una variable
+ * de esta clase.
  * @author Equipo 6 
  */
 public class Agente {
-	public Grafo graph;
-	public static Agente ag;
-	public static int 	NIVEL 				 = 2;
-	public static int 	MIN_MATCH_ATTRIBUTES = 4;
-	public static LinkedList<Persona> buscados_actualmente = new LinkedList<Persona>();
+	public Grafo graph; //-- Abstraccion de la libreria de jgraph
+	public static Agente ag; //-- Singleton del Agente.
 	
+	//-- Constantes que determinan algunos criterios de poda al encontrar usuarios
+	public static int 	NIVEL 				 = 2;
+	public static int 	MIN_MATCH_ATTRIBUTES = 3;
+	public static int 	PERSONS_FOUND_LIMIT	 = 3;
+	public static int	ERROR_RANGE			 = 90;
+	
+	static Persona daniel ;	
+	static Persona cynthia ;
+	
+	//-- Metodo temporal para agregar datos de prueba
 	public static void defaults(Agente x){
 		// Personas actuales
-		Persona daniel 	= new Persona("Daniel");
-		Persona cynthia = new Persona("Cynthia");
 		Persona ricardo = new Persona("Ricardo");
 		Persona angel 	= new Persona("Angel");
 		Persona memo 	= new Persona("Guillermo");
@@ -35,9 +44,9 @@ public class Agente {
 		Persona marin 	= new Persona("Marin");
 		
 		for(Persona persona : Persona.personas){
-			persona.setAttribute("Comida Spicy", 20);
-			persona.setAttribute("Comida China", 20);
-			persona.setAttribute("Soccer", 10);
+			persona.setAttribute("Comida Spicy", (float)(Math.random()*100));
+			persona.setAttribute("Comida China",(float)(Math.random()*100));
+			persona.setAttribute("Soccer", (float)(Math.random()*100));
 		}
 		
 		x.graph.g.addEdge(daniel, cynthia);
@@ -53,20 +62,24 @@ public class Agente {
 		
 	}
 	
+	//-- Main
 	public static void main(String[] args) {
 		Agente.ag = new Agente();
+		daniel = new Persona("Daniel");
+		cynthia = new Persona("Cynthia");
 		defaults(Agente.ag);
 		System.out.println("Inicial: "+Agente.ag.graph.g.toString());
-		//System.out.println(Persona.personas.getFirst().toString());
-		Agente.ag.buscarAmigos(Persona.personas.getFirst());
 		//Agente.ag.buscarAmigos(Persona.personas.getFirst());
+		Agente.ag.eliminaConexion(daniel, cynthia);
 		System.out.println("Final: "+Agente.ag.graph.g.toString());
 	}
 	
+	//-- Constructor
 	public Agente(){ 
 		this.graph = new Grafo(new Dimension( 530, 320 ));
 	}
 	
+	//-- Guarda un grafo
 	public void construyeGrafo(String filename){
 		this.graph.construyeGrafo(filename);
 	}
@@ -77,15 +90,24 @@ public class Agente {
 	
 	
 	public void buscarPersona(Persona p, Persona v, int nivel){ 
-		realizaConexion(p,v);
+		boolean result = realizaConexion(p,v);
+		Persona[] vecinos = v.getAmigos();
+		
+		if(!result){
+			//-- Si no hay conexion con el amigo, intentar un nivel mas a partir del amigo, para cersiorarse de 
+			//-- que no haya un subgrupo con los mismos gustos.
+			for(Persona vecino : vecinos){
+				realizaConexion(p,vecino);
+			}
+		}
+		
+		//-- Ultimo nivel, regresar.
 		if(nivel==0)
 			return;
-		NeighborIndex ni = new NeighborIndex(this.graph.g);
-		Object[] vecinos = ni.neighborsOf(v).toArray();
-		System.out.println("Vecinos de: \n"+v.toString());
 		
-		for(Object vecino: vecinos){
-			if(!((Persona)vecino).esAmigo(p)){ 
+		//-- Buscar sobre los amigos.
+		for(Persona vecino: vecinos){
+			if(!vecino.esAmigo(p)){ //TODO colocar aqui la probabilidad de que se pueda encontrar algo.
 				//Solamente se hace la llamada recursiva, si no hay conexion entre las personas
 				buscarPersona(p, (Persona)vecino, nivel-1);
 			}
@@ -94,15 +116,55 @@ public class Agente {
 	}
 	
 	
+	//-- Metodo que busca amigos con caracteristicas similares
 	public void buscarAmigos(Persona p){
 		NeighborIndex ni = new NeighborIndex(this.graph.g);
 		Object[] vecinos = ni.neighborsOf(p).toArray();
 		for(Object vecino: vecinos){
 			buscarPersona(p, (Persona)vecino, Agente.NIVEL);
 		}
-		Agente.buscados_actualmente = new LinkedList<Persona>(); //-- Borrarlos.
+	
 	}
 	
+
+	//-- Realiza la conexion en base a las caracteristicasy pesos que tiene cada uno
+	public boolean realizaConexion(Persona a, Persona b){
+		//se comparan los atributos y se modifica el grafo
+		boolean sw = false;
+		if(a.equals(b)) return false;
+		int common = 0;
+		
+		//-- Se busca sobre todos los atributos existentes, aquellos que tengan en comun
+		//-- si tienen en comun esos entonces calcular probabilidad y hacer la conexion.
+		for(Atributo base : Atributo.atributos){
+			Persona.PersonaAtributo aatrib = a.getAtributo(base.getName());
+			Persona.PersonaAtributo batrib = b.getAtributo(base.getName());
+			if(aatrib != null && batrib != null){
+				//-- Comparar peso de atributos con un rango de error.
+				float aweight = aatrib.getWeight();
+				float bweight = batrib.getWeight();
+				float dif = Math.abs(bweight - aweight);
+				if(dif <= Agente.ERROR_RANGE){
+				//if((aweight-Agente.ERROR_RANGE <= bweight && aweight+Agente.ERROR_RANGE >= bweight) || 
+				//		bweight-Agente.ERROR_RANGE <= aweight && bweight+Agente.ERROR_RANGE >= aweight){
+					common++;
+					
+					//-- Recalcular probabilidad de obtener otro atributo comoe ste
+				}
+			}
+		}
+		
+		if(common >= Agente.MIN_MATCH_ATTRIBUTES){
+			a.agregaAmigo(b);
+			b.agregaAmigo(a);
+			this.graph.g.addEdge(a,b);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	//-- Agrega una persona al grafo
 	public void agregarPersona(Persona p){ //Conecta a una nueva persona al resto del grafo
 		int x;
 		do{
@@ -115,11 +177,13 @@ public class Agente {
 		this.graph.g.addEdge(p,b);	
 	}
 	
+	//-- Quita una persona del grafo
 	public void quitarPersona(Persona p){
 		Persona.personas.remove(p.getId());
 		this.graph.g.removeVertex(p);
 	}
 	
+	//-- Elimina una conexion.
 	public void eliminaConexion(Persona a, Persona b){
 		a.agregaEnemigo(b);
 		a.removeAmigo(b);
@@ -127,45 +191,7 @@ public class Agente {
 		this.graph.g.removeEdge(this.graph.g.getEdge(a,b));
 	}
 	
-	public boolean realizaConexion(Persona a, Persona b){
-		//se comparan los atributos y se modifica el grafo
-		boolean sw = false;
-		if(a.equals(b)) return false;
-		int common = 0;
-		for(Atributo base : Atributo.atributos){
-			Persona.PersonaAtributo aatrib = a.getAtributo(base.getName());
-			Persona.PersonaAtributo batrib = b.getAtributo(base.getName());
-			if(aatrib != null && batrib != null){
-				common++;
-				System.out.println(a.toString()+":"+b.toString()+"-"+common);
-				//-- Comparar peso de atributos
-			}
-		}
-		
-		if(common >= Agente.MIN_MATCH_ATTRIBUTES){
-			a.agregaAmigo(b);
-			b.agregaAmigo(a);
-			this.graph.g.addEdge(a,b);
-			return true;
-		}
-		return false;
-		/*
-		for(int i=0; i<=asize && i <=bsize; i++){ //-- TODO Para todos los atributos en comun
-			if(aatrib.get(i).getName().equals(batrib.get(i).getName())){
-				sw = sw && true;
-			}else
-				sw = sw &&false;
-		}
-		if (sw && !a.esEnemigo(b) && !b.esEnemigo(a)){
-			a.agregaAmigo(b);
-			b.agregaAmigo(a);
-			this.graph.g.addEdge(a,b);
-			return true;
-		}else
-			return false;
-			*/
-	}
-	
+	//-- Guarda la informacion en un archivo
 	public static void guardaInformacion() throws IOException{
 		
 		PrintWriter salida = new PrintWriter(new FileWriter("estadoAct.txt"));
