@@ -34,6 +34,15 @@ public class Persona {
 		Agente.ag.graph.g.addVertex(this);
 	}
 	
+	public static Persona getPersona(int id){
+		for(Persona x : personas){
+			if(x.getId() == id){
+				return x;
+			}
+		}
+		return null;
+	}
+	
 	//-----
 	//-- Funciones de Exists
 	//-----
