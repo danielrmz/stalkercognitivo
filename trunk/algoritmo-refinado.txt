@@ -1,0 +1,13 @@
+1. Se empieza el recorrido con todos sus amigos a traves de los niveles indicados.
+2. Con un candidato
+   2.1 Obtener atributos comunes
+   2.2 Decidir si es amigo o no
+     2.2.1 Primero diferencia entre atributos comunes y sacar promedio de eso
+     2.2.2 Comprarar si es menos del 100-target asignado por la persona. = porciento de error
+           Si es menor, hacer conexion
+   2.3 Inicializar el promedio cada uno de  los atributos. para posteriormente modificar
+       el peso de los atributos del individo. Teoria: se debe de acentuar uno mas que los demas, en base a
+       que tipo de gente predomina en la red de amistades.
+   2.4 Ir sacando el promedio de cada atributo con las nuevas caracteristicas dadas por la conexion
+
+3. Continuar con el siguiente candidato.
