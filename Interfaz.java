@@ -16,6 +16,7 @@ public class Interfaz extends JFrame implements ActionListener {
 		this.setSize(800,600);
 		this.setTitle("StalkerCognitivo 127.0.0.1");
 		this.setResizable(false);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		
 		menuPrincipal = new JMenuBar();
@@ -46,13 +47,15 @@ public class Interfaz extends JFrame implements ActionListener {
 		menuPrincipal.add(simulacion);
 		menuPrincipal.add(ayuda);
 		
+		
 		panelIzq= new JPanel();
+		//Cargar el listado de personas a la lista
 		String amigoz [] = new String[100];
 		for(int i=0; i<100; i++){
 			amigoz[i] = "Amigo "+i;
 		}
 		amigos = new JList(amigoz);
-		amigos.setPreferredSize(new java.awt.Dimension(190, 600));
+		amigos.setPreferredSize(new java.awt.Dimension(200, 600));
 		amigos.setVisibleRowCount(30);
 		amigos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		panelIzq.add(new JScrollPane(amigos));
@@ -60,19 +63,19 @@ public class Interfaz extends JFrame implements ActionListener {
 		
 		panelDer = new JPanel();
 		//panelDer.setPreferredSize(new java.awt.Dimension(600, 800));
-		panelDer.setLayout(new GridLayout(2,1,5,5));
+		panelDer.setLayout(new BorderLayout());
 		grafo=new JPanel();
-		JTextArea p = new JTextArea("Hola");
-		p.setPreferredSize(new java.awt.Dimension(550, 400));
+		JTextArea p = new JTextArea("Adiosss");
+		p.setPreferredSize(new java.awt.Dimension(555, 335));
 		grafo.add(p);
-		grafo.setPreferredSize(new java.awt.Dimension(550, 500));
+		//grafo.setPreferredSize(new java.awt.Dimension(550, 500));
 		busqueda=new JPanel();
-		JTextArea p1 = new JTextArea("Hola");
-		p1.setPreferredSize(new java.awt.Dimension(550, 200));
+		JTextArea p1 = new JTextArea("Holaaaaaa");
+		p1.setPreferredSize(new java.awt.Dimension(555, 200));
 		busqueda.add(p1);
-		busqueda.setPreferredSize(new java.awt.Dimension(550, 300));
-		panelDer.add(grafo);
-		panelDer.add(busqueda);
+		//busqueda.setPreferredSize(new java.awt.Dimension(550, 300));
+		panelDer.add(grafo,BorderLayout.NORTH);
+		panelDer.add(busqueda,BorderLayout.SOUTH);
 		
 		this.setJMenuBar(menuPrincipal);
 		this.add(panelIzq,BorderLayout.WEST);
