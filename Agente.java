@@ -1,14 +1,9 @@
 import java.awt.Dimension;
-import java.util.LinkedList;
 import java.io.*;
-
 import org.jgraph.JGraph;
-import org.jgrapht.ListenableGraph;
 import org.jgrapht.alg.NeighborIndex;
-import org.jgrapht.ext.JGraphModelAdapter;
 import org.jgrapht.graph.*;
 
-import sun.misc.Queue;
 
 
 /**
@@ -136,7 +131,7 @@ public class Agente {
 	
 	//-- Metodo que busca amigos con caracteristicas similares
 	public void buscarAmigos(Persona p){
-		NeighborIndex ni = new NeighborIndex(this.graph.g);
+		NeighborIndex<Persona,DefaultEdge> ni = new NeighborIndex<Persona,DefaultEdge>(this.graph.g);
 		Object[] vecinos = ni.neighborsOf(p).toArray();
 		for(Object vecino: vecinos){
 			buscarPersona(p, (Persona)vecino, Agente.NIVEL);
@@ -144,37 +139,54 @@ public class Agente {
 	
 	}
 	
-
+	/*
+	 * 1. Se empieza el recorrido con todos sus amigos a traves de los niveles indicados.
+	   2. Con un candidato
+		   2.1 Obtener atributos comunes
+		   2.2 Decidir si es amigo o no
+		     2.2.1 Primero diferencia entre atributos comunes y sacar promedio de eso
+		     2.2.2 Comprarar si es menos del 100-target asignado por la persona. = porciento de error
+		           Si es menor, hacer conexion
+		   2.3 Inicializar el promedio cada uno de los atributos. para posteriormente modificar
+		       el peso de los atributos del individo. Teoria: se debe de acentuar uno mas que los demas, en base a
+		       que tipo de gente predomina en la red de amistades.
+		   2.4 Ir sacando el promedio de cada atributo con las nuevas caracteristicas dadas por la conexion
+	  3. Continuar con el siguiente candidato.
+	 */
+	
 	//-- Realiza la conexion en base a las caracteristicasy pesos que tiene cada uno
 	//-- funcion core donde se plasma el aumento de experiencia y creacion de relaciones
 	//-- entre usuarios
 	public boolean realizaConexion(Persona a, Persona b){
 		//se comparan los atributos y se modifica el grafo
-		boolean sw = false;
 		if(a.equals(b)) return false;
-		int common = 0;
-		
+		int common = 0; //num atributos comunes
+		double promedio = 0; //promedio de las diferencias entre los atributos comunes de las personas
 		//-- Se busca sobre todos los atributos existentes, aquellos que tengan en comun
 		//-- si tienen en comun esos entonces calcular probabilidad y hacer la conexion.
 		for(Atributo base : Atributo.atributos){
 			Persona.PersonaAtributo aatrib = a.getAtributo(base.getName());
 			Persona.PersonaAtributo batrib = b.getAtributo(base.getName());
 			if(aatrib != null && batrib != null){
-				//-- Comparar peso de atributos con un rango de error.
+				//-- Comparar peso de atributos y sacar su diferencia, irla acumulando en la variable promedio
 				float aweight = aatrib.getWeight();
 				float bweight = batrib.getWeight();
 				float dif = Math.abs(bweight - aweight);
-				if(dif <= Agente.ERROR_RANGE){
+				promedio += dif; //acumular la diferencia en la variable de promedio
+				common++; //contabilizar atributo comun
+				
+				/*if(dif <= Agente.ERROR_RANGE){
 				//if((aweight-Agente.ERROR_RANGE <= bweight && aweight+Agente.ERROR_RANGE >= bweight) || 
 				//		bweight-Agente.ERROR_RANGE <= aweight && bweight+Agente.ERROR_RANGE >= aweight){
 					common++;
 					
 					//-- Recalcular probabilidad de obtener otro atributo comoe ste
-				}
+				}*/
 			}
 		}
 		
-		if(common >= Agente.MIN_MATCH_ATTRIBUTES){
+		promedio /= common; //se promedian las diferencias de los atributos iguales
+		if(common >= Agente.MIN_MATCH_ATTRIBUTES && promedio<=Agente.ERROR_RANGE){ //considera el input dado por el usuario
 			a.agregaAmigo(b);
 			b.agregaAmigo(a);
 			this.graph.g.addEdge(a,b);

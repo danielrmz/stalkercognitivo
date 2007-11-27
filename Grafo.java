@@ -16,7 +16,7 @@ public class Grafo {
 	public ListenableGraph<Persona,DefaultEdge> g;
 	
 	//-- Adaptador de datos
-	public JGraphModelAdapter adapter = null;
+	public JGraphModelAdapter<Persona,DefaultEdge> adapter = null;
 	
 	//-- Adaptador de display.
 	public JGraph display;
