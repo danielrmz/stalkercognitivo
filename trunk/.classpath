@@ -2,13 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/Cognitiva/jgrapht-0.7.2/jgrapht-jdk1.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cyndee/workspace/Cognitiva/jgraph-latest-lgpl-src.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cyndee/workspace/Cognitiva/jgrapht-0.7.2/lib/jgraph.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cyndee/workspace/Cognitiva/jgrapht-0.7.2/lib/junit.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cyndee/workspace/Cognitiva/jgrapht-0.7.2/lib/svnant.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cyndee/workspace/Cognitiva/jgrapht-0.7.2/lib/svnClientAdapter.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cyndee/workspace/Cognitiva/jgrapht-0.7.2/lib/TGGraphLayout.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Cyndee/workspace/Cognitiva/jgrapht-0.7.2/lib/xmlunit1.0.jar"/>
+	<classpathentry kind="lib" path="/home/maga56/workspace/jgrapht-0.7.2/jgrapht-0.7.2/lib/jgraph.jar"/>
+	<classpathentry kind="lib" path="/home/maga56/workspace/jgrapht-0.7.2/jgrapht-0.7.2/lib/junit.jar"/>
+	<classpathentry kind="lib" path="/home/maga56/workspace/jgrapht-0.7.2/jgrapht-0.7.2/lib/svnant.jar"/>
+	<classpathentry kind="lib" path="/home/maga56/workspace/jgrapht-0.7.2/jgrapht-0.7.2/lib/svnClientAdapter.jar"/>
+	<classpathentry kind="lib" path="/home/maga56/workspace/jgrapht-0.7.2/jgrapht-0.7.2/lib/TGGraphLayout.jar"/>
+	<classpathentry kind="lib" path="/home/maga56/workspace/jgrapht-0.7.2/jgrapht-0.7.2/lib/xmlunit1.0.jar"/>
+	<classpathentry kind="lib" path="/home/maga56/workspace/jgrapht-0.7.2/jgrapht-0.7.2/jgrapht-jdk1.5.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -1,5 +1,7 @@
 import java.awt.Dimension;
+import java.util.StringTokenizer;
 import java.io.*;
+import java.util.*;
 import org.jgraph.JGraph;
 import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.graph.*;
@@ -31,7 +33,7 @@ public class Agente {
 	//-- Metodo temporal para agregar datos de prueba
 	public static void defaults(Agente x){
 		// Personas actuales
-		Persona ricardo = new Persona("Ricardo");
+		/*Persona ricardo = new Persona("Ricardo");
 		Persona angel 	= new Persona("Angel");
 		Persona memo 	= new Persona("Guillermo");
 		Persona pedro 	= new Persona("Pedro");
@@ -67,24 +69,33 @@ public class Agente {
 		//x.graph.g.addEdge(damaris,leo);
 		pedro.agregaAmigo(leo);
 		//x.graph.g.addEdge(pedro, leo);
-		cynthia.agregaEnemigo(angel);
+		cynthia.agregaEnemigo(angel);  */
 	}
 	
 	//-- Main
 	public static void main(String[] args) {
 		Agente.ag = new Agente();
 		defaults(Agente.ag);
+		try{
+			 cargaGrafo();
+			 
+			}
+			catch(Exception io){
+			   io.toString();	
+			
+			}
 		System.out.println("Inicial: "+Agente.ag.graph.g.toString());
 		System.out.println(Persona.personas.getFirst().atrToString());
 		Agente.ag.buscarAmigos(Persona.personas.getFirst());
 		System.out.println(Persona.personas.getFirst().atrToString());
 		System.out.println("Final: "+Agente.ag.graph.g.toString());
-		try{
-		guardaInformacion();
-		}
-		catch(IOException io){
-		   io.toString();	
 		
+		try{
+			guardaInformacion();
+			
+		}
+		catch(Exception e){
+			e.toString();
 		}
 	}
 	
@@ -273,31 +284,143 @@ public class Agente {
 		salida.println();
 		
 		for(int i=0; i<Persona.personas.size(); i++){
+			 if(Persona.personas.get(i).wlToString().equals("")){
+				 salida.print("@/");
+			 }
+			 else{
 		      
-			
-			 salida.print(Persona.personas.get(i).wlToString()+"/");
-			 salida.flush();
+		     salida.print(Persona.personas.get(i).wlToString()+"/");
+			 }
+             salida.flush();
 			
 		}
 		salida.println();
 		for(int i=0; i<Persona.personas.size(); i++){
 		      
-			
+			 if(Persona.personas.get(i).blToString().equals("")){
+				 salida.print("@/");
+			 }
+			 else{
 			 salida.print(Persona.personas.get(i).blToString()+"/");
+			 }
 			 salida.flush();
 			
 		}
 		salida.println();
 		for(int i=0; i<Persona.personas.size(); i++){
 		      
-			
+		
+	
 			 salida.print(Persona.personas.get(i).atrToString()+"/");
+			 salida.flush();
 			
 		}
 		
 		
 		salida.close();
 		
+	}
+	
+	public static Persona encuentraElemento(String nombre){
+		
+		for(int i=0; i<Persona.personas.size();i++){
+			if(Persona.personas.get(i).getNombre().equals(nombre)){
+				return Persona.personas.get(i);
+			}
+				
+		}
+		return null;
+	}
+	
+	public static void cargaGrafo() throws Exception{
+		  
+		BufferedReader ent = new BufferedReader(new FileReader("grafo.txt"));
+		
+		String s = ent.readLine();
+		StringTokenizer st= new StringTokenizer(s,"/");
+		int para=st.countTokens();
+		while(st.hasMoreElements()){
+		 String sub=(st.nextToken());	
+		    Persona i = new Persona(sub);
+		}
+		
+		s=ent.readLine();
+	    StringTokenizer st2=new StringTokenizer(s,"/");
+	    
+	    int size= st2.countTokens();
+	     Object org[][]=new Object[(size*size)-1][2];
+	     int u=0;
+		for(int i=0; i<9; i++){
+			int z=i;
+		  StringTokenizer sub2=new StringTokenizer(st2.nextToken(),",");	
+		  	 while(sub2.hasMoreTokens()){
+		  		 
+		  		  org[u][0]=sub2.nextToken();
+		  		  org[u][1]=z;
+		  		  u++;
+		  	 }
+		}
+		
+		/*for(int k1=0; k1<u; k1++){
+			System.out.println(""+org[k1][0]+" "+org[k1][1]);
+		}*/
+		
+		
+        for(int k2=0; k2<u; k2++){
+		
+         String k3=(""+org[k2][0]);
+         String k4=(""+org[k2][1]);
+         int test2=Integer.parseInt(k4);
+         Persona test = encuentraElemento(k3);
+         //System.out.println(test.getNombre()+" "+test2);
+		 Persona.personas.get(test2).agregaAmigo(test);
+		
+        }
+		
+	    s=ent.readLine();
+	    StringTokenizer st3=new StringTokenizer(s,"/");
+	    int i=0;
+	    while(st3.hasMoreElements()){
+	       String c2=st3.nextToken();
+	       
+	       if(!(c2.equals("@"))){
+	    	   Persona x=encuentraElemento(c2);
+	    	   Persona.personas.get(i).agregaEnemigo(x);
+	       }
+	       i++;
+	    }
+	    
+	    s=ent.readLine();
+	    int cont=0;
+	    
+	    
+	    StringTokenizer st4=new StringTokenizer(s,"/");
+	    //String sq=st4.nextToken();
+	   
+	    while(st4.hasMoreElements()){
+	    StringTokenizer sub4=new StringTokenizer(st4.nextToken(),",");
+	    String a="";
+	    
+	     while(sub4.hasMoreElements()){
+	    	String z=sub4.nextToken();
+	    	
+	    	if(!(z.equals("0.0"))){
+	    		a+=z+"|";
+	    	}
+	   
+	    }
+	    //System.out.println(a); 
+	    StringTokenizer ultimo=new StringTokenizer(a,"|");
+	     
+	    for(int ult=1; ult<=3; ult++){
+	    	
+	    	Persona.personas.get(cont).setAttribute(ultimo.nextToken(), Float.parseFloat(ultimo.nextToken()));
+	      	
+	    }
+	    
+	    cont++;
+	    }
+		ent.close();
 	}
 
 }
