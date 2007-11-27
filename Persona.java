@@ -42,6 +42,8 @@ public class Persona {
 		}
 		return null;
 	}
+
+
 	
 	//-----
 	//-- Funciones de Exists
@@ -71,7 +73,7 @@ public class Persona {
 	    String elem="";
 	    
 		 for(int i=0; i<blacklist.size(); i++){
-		   elem+=blacklist.get(i)+", ";
+		   elem+=blacklist.get(i)+",";
 		 }
 		 
 		 return elem;
@@ -81,7 +83,7 @@ public class Persona {
 	    String elem="";
 	    
 		 for(int i=0; i<conexiones.size(); i++){
-		   elem+=conexiones.get(i)+", ";
+		   elem+=conexiones.get(i)+",";
 		 }
 		 
 		 return elem;
@@ -91,7 +93,7 @@ public class Persona {
 	    String elem="";
 	    
 		 for(int i=0; i<atributos.size(); i++){
-		   elem+=atributos.get(i)+", ";
+		   elem+=atributos.get(i)+",";
 		 }
 		 
 		 return elem;
@@ -120,9 +122,22 @@ public class Persona {
 	}
 	
 	public void agregaAmigo(Persona amigo){
-		conexiones.addLast(amigo);
-		amigo.conexiones.addLast(this);
+		
+		
+        if (conexiones.size()==0){
+			
+			conexiones.addFirst(amigo);
+			Agente.ag.graph.g.addEdge(this,amigo);
+		}
+		else{
+		conexiones.add(amigo);
 		Agente.ag.graph.g.addEdge(this,amigo);
+		}
+        
+        System.out.println("Agregue a "+amigo.getNombre()+" a la lista "+this.getNombre());
+		
+		
+		
 		
 	
 	}
