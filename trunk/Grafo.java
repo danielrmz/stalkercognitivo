@@ -13,13 +13,13 @@ import org.jgrapht.graph.*;
  */
 public class Grafo {
 	///-- Grafo que puede ser manipulado
-	public ListenableGraph<Persona,DefaultEdge> g;
+	private ListenableGraph<Persona,DefaultEdge> g;
 	
 	//-- Adaptador de datos
 	public JGraphModelAdapter<Persona,DefaultEdge> adapter = null;
 	
 	//-- Adaptador de display.
-	public JGraph display;
+	private JGraph display;
 	
 	public Grafo(Dimension graphSize){
 		this.g = new ListenableUndirectedWeightedGraph<Persona , DefaultEdge>(DefaultEdge.class);
@@ -28,12 +28,11 @@ public class Grafo {
 		this.display.setSize(graphSize);
 	}
 	
-	public void exportaGrafo(){
-		
+	public JGraph getDisplay(){
+		return this.display;
 	}
 	
-	public void construyeGrafo(String filename){
-	
+	public ListenableGraph<Persona,DefaultEdge> getGraph(){
+		return this.g;
 	}
-	
 }

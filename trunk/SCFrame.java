@@ -31,10 +31,10 @@ public class SCFrame extends JFrame {
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				Agente.ag = new Agente();
-				Agente.defaults(Agente.ag);
-				System.out.println(Agente.ag.getGraph());
-				System.out.println(Agente.ag.graph.g.toString());
+				//Agente.ag = new Agente();
+				//Agente.defaults(Agente.ag);
+				//System.out.println(Agente.ag.getGraph());
+				//System.out.println(Agente.ag.graph.g.toString());
 				
 				SCFrame inst = new SCFrame();
 				inst.setLocationRelativeTo(null);
@@ -85,7 +85,7 @@ public class SCFrame extends JFrame {
 					jPanel1.add(jPanel2, BorderLayout.CENTER);
 					{
 						pnlGraph = new JPanel();
-						pnlGraph.add(Agente.ag.getGraph());
+						//pnlGraph.add(Agente.ag.getGraph());
 						pnlGraph.setSize(new Dimension( 730, 620 ));
 						jPanel2.add(pnlGraph, BorderLayout.CENTER);
 						{

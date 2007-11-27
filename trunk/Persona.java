@@ -31,7 +31,8 @@ public class Persona {
 		this.nombre = nombre;
 		Persona.personas.addLast(this);
 		this.id = Persona.personas.indexOf(this);
-		Agente.ag.graph.g.addVertex(this);
+		Main.getAgente().getGrafo().addVertex(this);
+		Main.getInterfaz().addElementToList(this);
 	}
 	
 	public static Persona getPersona(int id){
@@ -44,6 +45,17 @@ public class Persona {
 	}
 
 
+	
+	public static Persona[] getPersonas(){
+		Object[] personasOBJ = Persona.personas.toArray();
+		Persona[] y = new Persona[personasOBJ.length];
+		int i = 0;
+		for(Object z : personasOBJ){
+			y[i] = (Persona)z;
+			i++;
+		}
+		return y;
+	}
 	
 	//-----
 	//-- Funciones de Exists
@@ -127,19 +139,17 @@ public class Persona {
         if (conexiones.size()==0){
 			
 			conexiones.addFirst(amigo);
-			Agente.ag.graph.g.addEdge(this,amigo);
+			Main.getAgente().getGrafo().addEdge(this,amigo);
 		}
 		else{
 		conexiones.add(amigo);
-		Agente.ag.graph.g.addEdge(this,amigo);
+
+		Main.getAgente().getGrafo().addEdge(this,amigo);
+
 		}
         
-        System.out.println("Agregue a "+amigo.getNombre()+" a la lista "+this.getNombre());
-		
-		
-		
-		
-	
+      //  System.out.println("Agregue a "+amigo.getNombre()+" a la lista "+this.getNombre());
+
 	}
 	
 	public void removeAmigo(Persona amigo){
@@ -198,7 +208,7 @@ public class Persona {
 	}
 	
 	public Persona[] getAmigos(){
-		NeighborIndex ni = new NeighborIndex(Agente.ag.graph.g);
+		NeighborIndex ni = new NeighborIndex(Main.getAgente().getGrafo());
 		Object[] vecinos = ni.neighborsOf(this).toArray();
 		int i = 0;
 		Persona[] amigos = new Persona[vecinos.length];
