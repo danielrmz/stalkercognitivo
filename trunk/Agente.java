@@ -6,6 +6,7 @@ import org.jgrapht.graph.*;
 
 
 
+
 /**
  * Agente Inteligente. 
  * El principal proposito de esta clase es buscar a los amigos
@@ -22,7 +23,7 @@ public class Agente {
 	public static int 	NIVEL 				 = 2;
 	public static int 	MIN_MATCH_ATTRIBUTES = 3;
 	public static int 	PERSONS_FOUND_LIMIT	 = 3;
-	public static int	ERROR_RANGE			 = 90;
+	public static int	ERROR_RANGE			 = 40;
 	
 	static Persona daniel ;	
 	static Persona cynthia ;
@@ -74,8 +75,9 @@ public class Agente {
 		Agente.ag = new Agente();
 		defaults(Agente.ag);
 		System.out.println("Inicial: "+Agente.ag.graph.g.toString());
-		//Agente.ag.buscarAmigos(Persona.personas.getFirst());
-		
+		System.out.println(Persona.personas.getFirst().atrToString());
+		Agente.ag.buscarAmigos(Persona.personas.getFirst());
+		System.out.println(Persona.personas.getFirst().atrToString());
 		System.out.println("Final: "+Agente.ag.graph.g.toString());
 		try{
 		guardaInformacion();
@@ -101,28 +103,48 @@ public class Agente {
 	       return this.graph.display;
 	}
 	
-	
-	public void buscarPersona(Persona p, Persona v, int nivel){ 
-		boolean result = realizaConexion(p,v);
-		Persona[] vecinos = v.getAmigos();
-		
-		if(!result){
-			//-- Si no hay conexion con el amigo, intentar un nivel mas a partir del amigo, para cersiorarse de 
-			//-- que no haya un subgrupo con los mismos gustos.
-			for(Persona vecino : vecinos){
-				realizaConexion(p,vecino);
+	public void inicializarMatriz(float[][] promedioAtt){
+		for(int i=0; i<promedioAtt.length;i++){
+			for(int j=0; j<promedioAtt[0].length;j++){
+				promedioAtt[i][j]=0;
 			}
 		}
-		
-		//-- Ultimo nivel, regresar.
-		if(nivel==0)
-			return;
-		
-		//-- Buscar sobre los amigos.
-		for(Persona vecino: vecinos){
-			if(!vecino.esAmigo(p)){ //TODO colocar aqui la probabilidad de que se pueda encontrar algo.
-				//Solamente se hace la llamada recursiva, si no hay conexion entre las personas
-				buscarPersona(p, (Persona)vecino, nivel-1);
+	}
+	public void buscarPersona(Persona p, Queue<Vecino> pila){
+		float promedioAtt[][] = new float[p.getAtributos().size()][2]; // 0 - sumatoria , 1 - cantidad de hits
+		inicializarMatriz(promedioAtt);
+		while(!pila.isEmpty()){
+			//System.out.println(pila.toString());
+			Vecino candidato = pila.dequeue();
+			boolean result = realizaConexion(p,candidato.getP(),promedioAtt);
+			if(pila.peek()==null){
+				for(int i=0; i<promedioAtt.length;i++){
+					if(promedioAtt[i][1]!=0){ //evitar infinitos
+						float m = (p.getAtributos().get(i).getWeight()+(promedioAtt[i][0]/promedioAtt[i][1]))/2;
+						p.getAtributos().get(i).setWeight(m);
+					}
+				}
+				inicializarMatriz(promedioAtt);
+			}else if(pila.peek().getNivel()!=candidato.getNivel()){ //esta en el borde, realizar promedios
+				for(int i=0; i<promedioAtt.length;i++){
+					if(promedioAtt[i][1]!=0){ //evitar infinitos
+						float m = (p.getAtributos().get(i).getWeight()+(promedioAtt[i][0]/promedioAtt[i][1]))/2;
+						p.getAtributos().get(i).setWeight(m);
+					}
+				}
+				inicializarMatriz(promedioAtt);
+			}
+			if(candidato.getNivel()<=0){
+				continue;
+			}
+			Persona[] vecinos = candidato.getP().getAmigos();
+			
+			if(!result){
+				//-- Si no hay conexion con el amigo, intentar un nivel mas a partir del amigo, para cersiorarse de 
+				//-- que no haya un subgrupo con los mismos gustos.
+				for(Persona vecino : vecinos){
+					pila.enqueue(new Vecino(vecino,candidato.getNivel()-1));
+				}
 			}
 		}
 		
@@ -133,10 +155,15 @@ public class Agente {
 	public void buscarAmigos(Persona p){
 		NeighborIndex<Persona,DefaultEdge> ni = new NeighborIndex<Persona,DefaultEdge>(this.graph.g);
 		Object[] vecinos = ni.neighborsOf(p).toArray();
+		Queue<Vecino> pila = new Queue<Vecino>();
 		for(Object vecino: vecinos){
-			buscarPersona(p, (Persona)vecino, Agente.NIVEL);
+			Object[] candidatos = ni.neighborsOf((Persona)vecino).toArray();
+			for(Object candidato: candidatos){
+				pila.enqueue(new Vecino((Persona)candidato,Agente.NIVEL));
+			}
 		}
-	
+		//System.out.println(pila.toString());
+		buscarPersona(p, pila);
 	}
 	
 	/*
@@ -157,11 +184,13 @@ public class Agente {
 	//-- Realiza la conexion en base a las caracteristicasy pesos que tiene cada uno
 	//-- funcion core donde se plasma el aumento de experiencia y creacion de relaciones
 	//-- entre usuarios
-	public boolean realizaConexion(Persona a, Persona b){
+	public boolean realizaConexion(Persona a, Persona b, float[][] promAtt){
 		//se comparan los atributos y se modifica el grafo
 		if(a.equals(b)) return false;
 		int common = 0; //num atributos comunes
 		double promedio = 0; //promedio de las diferencias entre los atributos comunes de las personas
+		int indexAtt=0;
+		double pesoAtt=0;
 		//-- Se busca sobre todos los atributos existentes, aquellos que tengan en comun
 		//-- si tienen en comun esos entonces calcular probabilidad y hacer la conexion.
 		for(Atributo base : Atributo.atributos){
@@ -174,7 +203,8 @@ public class Agente {
 				float dif = Math.abs(bweight - aweight);
 				promedio += dif; //acumular la diferencia en la variable de promedio
 				common++; //contabilizar atributo comun
-				
+				indexAtt=a.getAtributos().indexOf(aatrib);
+				pesoAtt=batrib.getWeight();
 				/*if(dif <= Agente.ERROR_RANGE){
 				//if((aweight-Agente.ERROR_RANGE <= bweight && aweight+Agente.ERROR_RANGE >= bweight) || 
 				//		bweight-Agente.ERROR_RANGE <= aweight && bweight+Agente.ERROR_RANGE >= aweight){
@@ -184,9 +214,11 @@ public class Agente {
 				}*/
 			}
 		}
-		
 		promedio /= common; //se promedian las diferencias de los atributos iguales
-		if(common >= Agente.MIN_MATCH_ATTRIBUTES && promedio<=Agente.ERROR_RANGE){ //considera el input dado por el usuario
+		if(promedio<=Agente.ERROR_RANGE){ //considera el input dado por el usuario
+			//Se considera que en ese nivel hay alquien con esos gustos  
+			promAtt[indexAtt][0]+=pesoAtt;
+			promAtt[indexAtt][1]++;
 			a.agregaAmigo(b);
 			b.agregaAmigo(a);
 			this.graph.g.addEdge(a,b);

@@ -49,6 +49,13 @@ public class Queue<Item> implements Iterable<Item> {
         N--;
         return item;
     }
+    
+    // return the least recently added item
+    public Item peek() {
+        if (isEmpty()) return null;
+        Item item = first.item;
+        return item;
+    }
 
     // remove and return the least recently added item
     public String toString() {
