@@ -67,7 +67,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("SimulaciÃ³n");
+		simulacion = new JMenu("Simulación");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
@@ -81,7 +81,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		simulacionAtributos.addActionListener(this);
 		
 		
-		ayuda = new JMenu("Ayuda");
+		ayuda = new JMenu("Equipo");
 		ayudaInfo = new JMenuItem("Acerca De");
 		ayuda.add(ayudaInfo);
 		ayudaInfo.addActionListener(this);
@@ -270,7 +270,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(new JLabel("Porcentaje de Compatibilidad (x/100):"));
 		this.pnlBusqueda.add(compatibilidad);
-		this.pnlBusqueda.add(new JLabel("Niveles de Bï¿½squeda:"));
+		this.pnlBusqueda.add(new JLabel("Niveles de Búsqueda:"));
 		this.pnlBusqueda.add(niveles);
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(search);
@@ -370,7 +370,9 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 				this.lblStatusBar.setText("Seleccione una persona sobre la cual realizar la busqueda");
 				this.lblStatusBar.setForeground(Color.red);
 			} else {
-				BlackListFrame blf = new BlackListFrame(this.seleccionada);
+				Persona x = this.seleccionada;
+				System.out.println(x.toString());
+				BlackListFrame blf = new BlackListFrame(x);
 				blf.setVisible(true);
 			}
 	     }else if(e.getSource().equals(ayudaInfo)){
@@ -397,7 +399,8 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 				this.lblStatusBar.setText("Seleccione una persona sobre la cual realizar la busqueda");
 				this.lblStatusBar.setForeground(Color.red);
 			} else {
-				AgregaPersonaFrame x = new AgregaPersonaFrame(this.seleccionada);
+				Persona y = this.seleccionada;
+				AgregaPersonaFrame x = new AgregaPersonaFrame(y);
 				x.setVisible(true);
 			}
 		}

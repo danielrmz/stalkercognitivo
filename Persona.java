@@ -104,7 +104,7 @@ public class Persona {
 	//-----
 	public boolean esEnemigo(Persona p){
 		for(Persona a : this.blacklist){
-			if(a.equals(p)){
+			if(a!= null && p != null && a.equals(p)){
 				return true;
 			}
 		}

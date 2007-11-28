@@ -29,9 +29,9 @@ public class manejadorAtributos extends JFrame implements ActionListener {
 		
 		this.setResizable(true);
 		JList atr=new JList(dlm);
-		a=new JLabel("A continuaciÃ³n se muestran los atributos disponibles:\n");
+		a=new JLabel("A continuación se muestran los atributos disponibles:\n");
 		b=new JLabel("Nombre del atributo:");
-		c=new JLabel("Agregar Atributo-");
+		c=new JLabel("Agregar Atributo - ");
 		d=new JLabel("El atributo se ha agregado exitosamente.");
     	this.add(a);
 		Insets inset=this.getInsets();
@@ -91,10 +91,21 @@ public class manejadorAtributos extends JFrame implements ActionListener {
 		  this.setVisible(false);
 	  }
 	  else{
-		 Atributo atr=new Atributo(one.getText());
-		 d.setVisible(true);
-		 int z= Persona.PersonaAtributo.atributos.size();
-		 this.dlm.addElement(Persona.PersonaAtributo.atributos.get(z-1));
+		  String nombre_atributo = one.getText();
+		  for(Atributo a: Atributo.atributos) {
+			  if(a.getName().equals(nombre_atributo)){
+				  d.setForeground(Color.red);
+				  d.setText("El atributo indicado ya existe.");
+				  return;
+			  }
+		  }
+				
+		  Atributo atr =new Atributo(one.getText());
+		  d.setVisible(true);
+		  this.dlm.addElement(atr);
+		  d.setForeground(Color.black);
+		  d.setText("El atributo se ha agregado exitosamente.");
+		 
 	  }
 	
 		

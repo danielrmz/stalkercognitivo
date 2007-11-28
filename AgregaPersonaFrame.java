@@ -33,8 +33,10 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 		this.setTitle("Administrar atributos de la persona: "+p.getNombre());
 		LinkedList<Persona.PersonaAtributo> atribs = p.getAtributos();
 		for(int i = 0; i < this.pesos.length; i++ ){
-			this.pesos[i].setText(atribs.get(i).getWeight()+"");
-			this.atributos[i].setSelectedItem(atribs.get(i).getName());
+			if(atribs.get(i)!=null){
+				this.pesos[i].setText(atribs.get(i).getWeight()+"");
+				this.atributos[i].setSelectedItem(atribs.get(i).getName());
+			}
 		}
 	}
 	
@@ -154,6 +156,13 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 			}
 			if(validar(name,att,attval)){
 				if(this.base == null){
+					for(Persona pexist : Persona.getPersonas()){
+						if(pexist.getNombre().equals(name)){
+							//-- Error
+							statusBar.setText("Esa persona ya existe.");
+							return;
+						}
+					}
 					Persona p = new Persona(name);
 					if(Persona.personas.indexOf(p)!=-1 && this.base == null){ //-- nuevo
 						for(int i=0; i<Atributo.atributos.size();i++){
