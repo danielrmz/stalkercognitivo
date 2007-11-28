@@ -6,7 +6,13 @@ import java.util.LinkedList;
 import org.jgraph.*;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
-
+/**
+ * Frame para dar de alta una nueva persona en el sistema. Contiene el campode  nombre
+ * y de losa tributos a incluir en el
+ * Opcionalmente sirve para editar una persona, dependiendo del constructor usado
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez 
+ */
 public class AgregaPersonaFrame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 9057251280536386344L;

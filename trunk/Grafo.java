@@ -19,8 +19,8 @@ import org.jgrapht.graph.*;
 
 /**
  * Encapsulador del objeto de grafo y su grafica, 
- * TODO: Establecer un poco mas de abstraccion de datos en esta parte.
- * @author Equipo 6
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez
  *
  */
 public class Grafo {

@@ -6,7 +6,7 @@ import org.jgrapht.alg.NeighborIndex;
 
 /**
  * Encapsuladora de los datos de una persona
- * @author Equipo 6
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez
  */
 public class Persona {
 	
