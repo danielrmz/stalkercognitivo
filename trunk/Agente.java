@@ -15,7 +15,7 @@ import org.jgrapht.graph.*;
  * Asimismo proveer de una interfaz para la obtencion del grafo que se contiene en una variable
  * de esta clase.
  * 
- * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez 
+ * @author Equipo 6 Cynthia Treviï¿½o, Ricardo Magallanes, Daniel Ramirez 
  */
 public class Agente {
 	private Grafo graph; //-- Abstraccion de la libreria de jgraph

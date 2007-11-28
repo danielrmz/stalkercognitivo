@@ -67,7 +67,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("Simulación");
+		simulacion = new JMenu("Simulaciï¿½n");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
@@ -77,6 +77,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		simulacion.add(simulacionBorrar);
 		simulacion.add(simulacionAtributos);
 		
+		simulacionBorrar.addActionListener(this);
 		simulacionAtributos.addActionListener(this);
 		
 		
@@ -104,6 +105,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		amigos.addMouseListener(new MouseListener(){
 
 			public void mouseClicked(MouseEvent e) {
+				
 				if(e.getClickCount() == 1){
 					int index = amigos.locationToIndex(e.getPoint());
 				    ListModel dlm = amigos.getModel();
@@ -111,6 +113,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 				    amigos.ensureIndexIsVisible(index);
 				    seleccionada = (Persona)item;
 				    updatePropertiesPanel();
+				    
 				   
 				}
 			}
@@ -272,6 +275,8 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	}
 	
 	
+	
+	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(archivoNuevo)){
 			Main.getAgente().clear();
@@ -360,7 +365,13 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 				BlackListFrame blf = new BlackListFrame(this.seleccionada);
 				blf.setVisible(true);
 			}
-		} else if(e.getSource().equals(edit)){
+	     } else if(e.getSource().equals(simulacionBorrar)){
+	    	 if(seleccionada!=null){
+	    		 Main.getAgente().quitarPersona(seleccionada);
+	    		 this.removeElement(seleccionada);
+	    	 }
+	     }
+		 else if(e.getSource().equals(edit)){
 			if(this.seleccionada == null){
 				this.lblStatusBar.setText("Seleccione una persona sobre la cual realizar la busqueda");
 				this.lblStatusBar.setForeground(Color.red);
