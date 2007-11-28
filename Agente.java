@@ -274,8 +274,8 @@ public class Agente {
 	
 	//-- Quita una persona del grafo
 	public void quitarPersona(Persona p){
-		Persona.personas.remove(p.getId());
 		this.graph.getGraph().removeVertex(p);
+		Persona.personas.remove(p);
 	}
 	
 	//-- Elimina una conexion.
