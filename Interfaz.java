@@ -67,7 +67,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("Simulación");
+		simulacion = new JMenu("SimulaciÃ³n");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
@@ -84,6 +84,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		ayuda = new JMenu("Ayuda");
 		ayudaInfo = new JMenuItem("Acerca De");
 		ayuda.add(ayudaInfo);
+		ayudaInfo.addActionListener(this);
 		
 		menuPrincipal.add(archivo);
 		menuPrincipal.add(simulacion);
@@ -269,7 +270,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(new JLabel("Porcentaje de Compatibilidad (x/100):"));
 		this.pnlBusqueda.add(compatibilidad);
-		this.pnlBusqueda.add(new JLabel("Niveles de Búsqueda:"));
+		this.pnlBusqueda.add(new JLabel("Niveles de Bï¿½squeda:"));
 		this.pnlBusqueda.add(niveles);
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(search);
@@ -372,7 +373,11 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 				BlackListFrame blf = new BlackListFrame(this.seleccionada);
 				blf.setVisible(true);
 			}
-	     } else if(e.getSource().equals(simulacionBorrar)){
+	     }else if(e.getSource().equals(ayudaInfo)){
+	    	 about a=new about();
+	    	 a.setVisible(true);
+	     }
+		else if(e.getSource().equals(simulacionBorrar)){
 	    	 if(seleccionada!=null){
 	    		 Main.getAgente().quitarPersona(seleccionada);
 	    		 //-- Cortar la ventana abierta
