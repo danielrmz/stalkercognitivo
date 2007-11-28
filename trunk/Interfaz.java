@@ -51,7 +51,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("Simulación");
+		simulacion = new JMenu("Simulaciï¿½n");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionBuscar = new JMenuItem ("Buscar Amigos");
@@ -144,7 +144,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(new JLabel("Porcentaje de Compatibilidad (x/100):"));
 		this.pnlBusqueda.add(compatibilidad);
-		this.pnlBusqueda.add(new JLabel("Niveles de Búsqueda:"));
+		this.pnlBusqueda.add(new JLabel("Niveles de Bï¿½squeda:"));
 		this.pnlBusqueda.add(niveles);
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(search);
@@ -171,7 +171,12 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	        } 
 		} else if(e.getSource().equals(archivoCerrar)){
 			System.exit(0);
-		} else if(e.getSource().equals(search)){
+		} 
+		else if (e.getSource().equals(simulacionAtributos)){
+			manejadorAtributos ma=new manejadorAtributos();
+			ma.setVisible(true);
+		}
+		else if(e.getSource().equals(search)){
 			if(this.seleccionada == null){
 				this.lblStatusBar.setText("Seleccione una persona sobre la cual realizar la busqueda");
 				this.lblStatusBar.setForeground(Color.red);
@@ -182,6 +187,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 			}
 			
 		}
+	
 	}
 
 	@Override
