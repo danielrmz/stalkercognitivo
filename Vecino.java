@@ -1,3 +1,8 @@
+/**
+ * Encapsulacion para agregarle atributos adicionales sin tener una herencia de la clase.
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez 
+ */
 public class Vecino {
 
 	private Persona p;

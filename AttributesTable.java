@@ -2,6 +2,12 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.Dimension;
 
+/**
+ * Muestra una tabla simple con los atributos de la persona indicada
+ * se separo en esta clase debido a la implementacion basica de Java no era muy efectiva
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez 
+ */
 public class AttributesTable extends JTable {
 	private static final long serialVersionUID = -4058326085312364394L;
 	public AttributesModel sm = new AttributesModel();

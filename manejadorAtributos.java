@@ -3,7 +3,11 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
 
-
+/**
+ * Frame para agregar los atributoos al sistema
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez 
+ */
 public class manejadorAtributos extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1039877813653006074L;

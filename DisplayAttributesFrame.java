@@ -4,7 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.LinkedList;
-
+/**
+ * Despliega los atributos para poder observar sus cambios a la par de la busqueda
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez 
+ */
 public class DisplayAttributesFrame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;

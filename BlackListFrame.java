@@ -2,7 +2,11 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-
+/**
+ * Frame para editar la lista de bloqueados/no bloqueados del sistema
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez 
+ */
 public class BlackListFrame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 2149207796714760514L;

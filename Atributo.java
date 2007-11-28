@@ -4,7 +4,8 @@ import java.util.*;
  * Encapsuladora de los atributos en general
  * Administra los atributos en el sistema actualmente
  * y sus datos.
- * @author Equipo 6
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez
  */
 public class Atributo {
 	//-- Atributos dados de alta en el sistema
