@@ -186,7 +186,12 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 					persona_registrada.setNombre(name);
 					int i = 0;
 					for(String atributo : att){
-						this.base.getAtributo(atributo).setWeight(Float.parseFloat(attval[i]));
+						Atributo x = this.base.getAtributo(atributo);
+						if(x == null){
+							this.base.setAttribute(atributo, Float.parseFloat(attval[i]));
+						} else {
+							this.base.getAtributo(atributo).setWeight(Float.parseFloat(attval[i]));
+						}
 						i++;
 					}
 					Main.getInterfaz().updatePropertiesPanel();
