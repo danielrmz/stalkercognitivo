@@ -106,7 +106,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		amigos.addMouseListener(new MouseListener(){
 
 			public void mouseClicked(MouseEvent e) {
-
+				try {
 				int index = amigos.locationToIndex(e.getPoint());
 			    ListModel dlm = amigos.getModel();
 			    Object item = dlm.getElementAt(index);
@@ -118,6 +118,10 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 
 				} else if(e.getClickCount() == 1 && e.getButton() == e.BUTTON3){
 					DisplayAttributesFrame.getAttributesForm((Persona)item);
+				}
+				} catch(Exception ex){
+					lblStatusBar.setText("La red se encuentra vacía");
+					lblStatusBar.setForeground(Color.red);
 				}
 			}
 
@@ -281,9 +285,62 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	
 	
 	public void actionPerformed(ActionEvent e) {
+		this.lblStatusBar.setText("");
+		this.lblStatusBar.setForeground(Color.black);
 		if(e.getSource().equals(archivoNuevo)){
-			Main.getAgente().clear();
+			int n = JOptionPane.showConfirmDialog(
+				    this,
+				    "¿Desea guardar los cambios?",
+				    "Alerta",
+				    JOptionPane.YES_NO_CANCEL_OPTION);
+				if(n == JOptionPane.YES_OPTION){
+					JFileChooser fc = new JFileChooser();
+					int returnVal = fc.showSaveDialog(this);
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			            File file = fc.getSelectedFile();
+			            String path = file.getAbsolutePath();
+			            //-- Mandar a guardar archivo del agente
+			            try {
+			            	Grafo.guardaInformacion(path);
+			            	this.lblStatusBar.setText("Archivo Guardado: "+path);
+							
+			 		    } catch(Exception ex){
+			 		    	this.lblStatusBar.setText("No fue posible guardar el archivo");
+			 		    }
+			 		   
+			        } 
+				} else if(n == JOptionPane.CANCEL_OPTION){
+					return;
+				}
+				Main.getAgente().clear();
 		} else if(e.getSource().equals(archivoAbrir)){
+			if(Persona.getPersonas().length > 0){
+				int n = JOptionPane.showConfirmDialog(
+				    this,
+				    "¿Desea guardar los cambios?",
+				    "Alerta",
+				    JOptionPane.YES_NO_CANCEL_OPTION);
+				if(n == JOptionPane.YES_OPTION){
+					JFileChooser fc = new JFileChooser();
+					int returnVal = fc.showSaveDialog(this);
+			        if (returnVal == JFileChooser.APPROVE_OPTION) {
+			            File file = fc.getSelectedFile();
+			            String path = file.getAbsolutePath();
+			            //-- Mandar a guardar archivo del agente
+			            try {
+			            	Grafo.guardaInformacion(path);
+			            	this.lblStatusBar.setText("Archivo Guardado: "+path);
+							
+			 		    } catch(Exception ex){
+			 		    	this.lblStatusBar.setText("No fue posible guardar el archivo");
+			 		    }
+			 		   
+			        } 
+				} else if(n == JOptionPane.CANCEL_OPTION){
+					return;
+				}
+			}
+			Main.getAgente().clear(); //-- Limpiar informacion actual
 			JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {

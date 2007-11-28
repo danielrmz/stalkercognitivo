@@ -11,7 +11,7 @@ public class about extends JFrame implements ActionListener{
 	private JButton quit;
 	
 	public about(){
-		
+		this.setBackground(Color.white);
 		setVisible(true);
 		setTitle("Acerca de");
 		setSize(300,300);
