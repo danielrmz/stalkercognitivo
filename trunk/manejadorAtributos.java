@@ -59,11 +59,11 @@ public class manejadorAtributos extends JFrame implements ActionListener {
         Dimension x3=one.getPreferredSize();
         one.setBounds(384+inset.left,60+inset.top,x3.width,x3.height);
         
-        salir=new JButton("Salir");
+        salir=new JButton("Cerrar Ventana");
         salir.addActionListener(this);
         this.add(salir);
         Dimension x6=salir.getPreferredSize();
-        salir.setBounds(384+inset.left,100+inset.top,x6.width,x6.height);
+        salir.setBounds(304+inset.left,100+inset.top,x6.width,x6.height);
         
         agregar=new JButton("Agregar Atributo");
         agregar.addActionListener(this);
