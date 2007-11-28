@@ -165,10 +165,15 @@ public class Persona {
 		else{
 		blacklist.add(enemigo);
 		}
+		
+		Main.getAgente().getGrafo().removeEdge(enemigo, this);
+		Main.getAgente().getGrafo().removeEdge(this, enemigo);
 	}
 	
 	public void removeEnemigo(Persona enemigo){
 		blacklist.remove(enemigo);
+		Main.getAgente().getGrafo().addEdge(enemigo, this);
+		Main.getAgente().getGrafo().addEdge(this, enemigo);
 	}
 	
 	public Persona getEnemigo(int id){

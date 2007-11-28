@@ -98,11 +98,12 @@ public class BlackListFrame extends JFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(arg0.getSource().equals(agregar)){
+		if(arg0.getSource().equals(agregar)){//-- Agregar a lista negra
 			Persona seleccionado = (Persona)this.aceptados.getSelectedValue();
 			this.base.agregaEnemigo(seleccionado);
 			this.dlmAceptados.removeElement(seleccionado);
 			this.dlmBlacklist.addElement(seleccionado);
+			
 		} else if(arg0.getSource().equals(quitar)){
 			Persona seleccionado = (Persona)this.blacklist.getSelectedValue();
 			this.base.removeEnemigo(seleccionado);
