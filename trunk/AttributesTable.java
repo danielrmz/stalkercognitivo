@@ -6,7 +6,7 @@ public class AttributesTable extends JTable {
 	private static final long serialVersionUID = -4058326085312364394L;
 	public AttributesModel sm = new AttributesModel();
 	
-	public AttributesTable(int width, int height){
+	public AttributesTable(){
 		this.setModel(this.sm);
 	}
 	

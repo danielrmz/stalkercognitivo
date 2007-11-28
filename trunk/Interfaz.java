@@ -67,7 +67,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("Simulaciï¿½n");
+		simulacion = new JMenu("Simulación");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
@@ -105,16 +105,18 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		amigos.addMouseListener(new MouseListener(){
 
 			public void mouseClicked(MouseEvent e) {
-				
-				if(e.getClickCount() == 1){
-					int index = amigos.locationToIndex(e.getPoint());
-				    ListModel dlm = amigos.getModel();
-				    Object item = dlm.getElementAt(index);
-				    amigos.ensureIndexIsVisible(index);
+
+				int index = amigos.locationToIndex(e.getPoint());
+			    ListModel dlm = amigos.getModel();
+			    Object item = dlm.getElementAt(index);
+			    amigos.ensureIndexIsVisible(index);
+			    
+			    if(e.getClickCount() == 1 && e.getButton() == e.BUTTON1){
 				    seleccionada = (Persona)item;
 				    updatePropertiesPanel();
-				    
-				   
+
+				} else if(e.getClickCount() == 1 && e.getButton() == e.BUTTON3){
+					DisplayAttributesFrame.getAttributesForm((Persona)item);
 				}
 			}
 
@@ -225,7 +227,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		Object[][] data = {{"","",""}};
 		//String[] cols = {"Atributo","Peso"};
 		seleccionada_nombre 	= new JLabel("Seleccione una persona");
-		seleccionada_atributos 	= new AttributesTable(485,45);
+		seleccionada_atributos 	= new AttributesTable();
 		seleccionada_atributos.setData(data);
 		JScrollPane tsp = new JScrollPane(seleccionada_atributos);
 		tsp.setBounds(0,10,200,150);
@@ -247,7 +249,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	
 	public void updatePropertiesPanel(){
 		if(this.seleccionada == null){
-			seleccionada_nombre 	= new JLabel("Seleccione una persona");
+			seleccionada_nombre.setText("Seleccione una persona");
 			Object[][] data = {{"","",""}};
 			seleccionada_atributos.setData(data);
 			return;
@@ -267,7 +269,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(new JLabel("Porcentaje de Compatibilidad (x/100):"));
 		this.pnlBusqueda.add(compatibilidad);
-		this.pnlBusqueda.add(new JLabel("Niveles de Bï¿½squeda:"));
+		this.pnlBusqueda.add(new JLabel("Niveles de Búsqueda:"));
 		this.pnlBusqueda.add(niveles);
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(search);
@@ -287,7 +289,9 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		       File file = fc.getSelectedFile();
 		       String path = file.getAbsolutePath();
 		       try {
-		       Grafo.cargaGrafo(path);
+		    	   Grafo.cargaGrafo(path);
+		    	   this.lblStatusBar.setText("Red Cargada: "+path);
+					
 		       } catch(Exception ex){
 		    	   this.lblStatusBar.setText("No fue posible abrir el archivo");
 		       }
@@ -301,6 +305,8 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	            //-- Mandar a guardar archivo del agente
 	            try {
 	            	Grafo.guardaInformacion(path);
+	            	this.lblStatusBar.setText("Archivo Guardado: "+path);
+					
 	 		    } catch(Exception ex){
 	 		    	this.lblStatusBar.setText("No fue posible guardar el archivo");
 	 		    }
@@ -344,6 +350,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 						pnlResultados.removeAll();
 						pnlResultados.add(new JTable(data,cols));
 						pnlResultados.repaint();
+						DisplayAttributesFrame.refreshWindows();
 					}
 				} else if(nivel <= 0){
 					this.lblStatusBar.setText("El nivel debe de ser mayor a 0");
@@ -368,7 +375,16 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	     } else if(e.getSource().equals(simulacionBorrar)){
 	    	 if(seleccionada!=null){
 	    		 Main.getAgente().quitarPersona(seleccionada);
+	    		 //-- Cortar la ventana abierta
+	    		 for(DisplayAttributesFrame ve : DisplayAttributesFrame.ventanas){
+	    			 if(ve.p.equals(seleccionada)){
+	    				 ve.dispose();
+	    			 }
+	    		 }
 	    		 this.removeElement(seleccionada);
+	    		 this.amigos.repaint();
+	    		 this.seleccionada = null;
+	    		 this.updatePropertiesPanel();
 	    	 }
 	     }
 		 else if(e.getSource().equals(edit)){

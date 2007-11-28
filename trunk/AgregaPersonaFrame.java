@@ -112,7 +112,7 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 			return false;
 		}
 		for(int i=0; i<Atributo.atributos.size();i++){
-			if(!att[i].equals("")){
+			if(att[i]!=null && !att[i].equals("")){
 				sw=false;
 				try{
 					Float.parseFloat(attval[i]);
@@ -136,16 +136,22 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 			String name = nombre.getText();
 			String [] att = new String[Atributo.atributos.size()];
 			String [] attval = new String[Atributo.atributos.size()];
-			for(int i=0; i<Atributo.atributos.size();i++){
-				att[i]= (String)atributos[i].getSelectedItem();
-				attval[i]= pesos[i].getText();
+			LinkedList<String> already = new LinkedList<String>();
+			for(int i=0, j=0; i<Atributo.atributos.size();i++){
+				String item = (String)atributos[i].getSelectedItem();
+				if(!already.contains(item)){
+					att[j]= item;
+					attval[j]= pesos[i].getText();
+					already.add(item);
+					j++;
+				}
 			}
 			if(validar(name,att,attval)){
 				if(this.base == null){
 					Persona p = new Persona(name);
 					if(Persona.personas.indexOf(p)!=-1 && this.base == null){ //-- nuevo
 						for(int i=0; i<Atributo.atributos.size();i++){
-							if(!att[i].equals("")){
+							if(att[i]!=null && !att[i].equals("")){
 								p.setAttribute(att[i], Float.parseFloat(attval[i]));
 							}
 						}
