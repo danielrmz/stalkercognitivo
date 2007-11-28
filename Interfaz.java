@@ -1,21 +1,26 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 import org.jgraph.*;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
-
 import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
 
+/**
+ * Clase de la Interfaz Principal
+ * 
+ * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez
+ */
 public class Interfaz extends JFrame implements ActionListener,GraphSelectionListener {
 
 	private static final long serialVersionUID = 1039877813653006074L;
-
+	
 	private JMenuBar menuPrincipal;
 	private JMenu archivo, simulacion, ayuda;
-	private JMenuItem archivoAbrir, archivoGuardar, archivoCerrar, simulacionAgregar,
-					  simulacionBorrar, simulacionBuscar, simulacionAtributos,
+	private JMenuItem archivoNuevo, archivoAbrir, archivoGuardar, archivoCerrar, simulacionAgregar,
+					  simulacionBorrar, simulacionAtributos,
 					  ayudaInfo;
 	private JList amigos;
 	private JPanel pnlGrafo,pnlBusqueda, panelAttribs;
@@ -23,30 +28,40 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	private JButton search;
 	private JTextField compatibilidad,niveles;
 	private JLabel lblStatusBar;
+
+	private Persona seleccionada = null;
+	private JLabel seleccionada_nombre;
+	private AttributesTable seleccionada_atributos;
 	
 	private DefaultListModel dlm = new DefaultListModel();
 	
-	private Persona seleccionada = null;
 	
 	public Interfaz(){
 		//-- Propiedades de la Interfaz
-		this.setSize(950,600);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    this.setSize((int)screenSize.getWidth(),(int)(screenSize.getHeight()-30));
+	    
 		this.setTitle("Simulador de Redes Sociales");
 		this.setLayout(new BorderLayout());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(true);
+		this.setResizable(false);
+		
+		Container content = getContentPane();
 		
 		//-- Menu Principal
 		menuPrincipal = new JMenuBar();
 		
 		archivo = new JMenu("Archivo");
+		archivoNuevo = new JMenuItem("Nueva Red");
 		archivoAbrir = new JMenuItem ("Abrir Red");
 		archivoGuardar = new JMenuItem ("Guardar Red");
 		archivoCerrar = new JMenuItem ("Cerrar Simulador");
+		archivoNuevo.addActionListener(this);
 		archivoAbrir.addActionListener(this);
 		archivoGuardar.addActionListener(this);
 		archivoCerrar.addActionListener(this);
 		
+		archivo.add(archivoNuevo);
 		archivo.add(archivoAbrir);
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
@@ -54,13 +69,11 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		simulacion = new JMenu("Simulación");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
-		simulacionBuscar = new JMenuItem ("Buscar Amigos");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
 		simulacionAgregar.addActionListener(this);
 		
 		simulacion.add(simulacionAgregar);
 		simulacion.add(simulacionBorrar);
-		simulacion.add(simulacionBuscar);
 		simulacion.add(simulacionAtributos);
 		
 		
@@ -80,42 +93,63 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		
 		//-- Establecer las propiedades lista de amigos.
 		amigos = new JList(dlm);
-		
-		amigos.setPreferredSize(new Dimension(190, 600));
-		amigos.setMinimumSize(new Dimension(190, 600));
+		amigos.setPreferredSize(new Dimension(120, 600));
 		amigos.setVisibleRowCount(30);
 		amigos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		amigos.setFixedCellHeight(20);
+		amigos.setCellRenderer(new CellRenderer());
+		
+		JScrollPane jsam = new JScrollPane(amigos);
+		jsam.setPreferredSize(new Dimension(190, 600));
+		jsam.setMinimumSize(new Dimension(190, 600));
+		jsam.setMaximumSize(new Dimension(190, 600));
 		
 		//-- Paneles Principales
-		panelAttribs = new JPanel();
-		panelAttribs.setPreferredSize(new Dimension(150, 400));
-		panelAttribs.setMinimumSize(new Dimension(150,400));
+		panelAttribs = new JPanel(new BorderLayout());
+		panelAttribs.setPreferredSize(new Dimension(150, 150));
+		panelAttribs.setMinimumSize(new Dimension(150,150));
+		panelAttribs.setMaximumSize(new Dimension(150,150));
 		
 		pnlGrafo = new JPanel();
-		pnlGrafo.setPreferredSize(new Dimension(550, 400));
-		pnlGrafo.setMinimumSize(new Dimension(550,400));
+		pnlGrafo.setPreferredSize(new Dimension(550, 600));
+		pnlGrafo.setMinimumSize(new Dimension(550,600));
+		pnlGrafo.add(new JLabel());
 		
 		pnlBusqueda = new JPanel(new GridLayout(4,2));
-		pnlBusqueda.setPreferredSize(new Dimension(550, 200));
-		pnlBusqueda.setMinimumSize(new Dimension(550, 200));
+		pnlBusqueda.setPreferredSize(new Dimension(550, 150));
+		pnlBusqueda.setMinimumSize(new Dimension(550, 150));
+		
+		
+		this.buildSearchPanel();
+		this.buildPropertiesPanel();
+		
+		
+		panelSub.setLeftComponent(pnlBusqueda);
+		panelSub.setRightComponent(panelAttribs);
 		
 		panelDer.setLeftComponent(pnlGrafo);
-		panelDer.setRightComponent(pnlBusqueda);
+		panelDer.setRightComponent(panelSub);
 		
 		//-- Agregar al splitpane vertical
-		panelCentral.setLeftComponent(new JScrollPane(amigos));
+		
+		panelCentral.setLeftComponent(jsam);
 		panelCentral.setRightComponent(panelDer);
 		
 		//-- Agregar al canvas principal
 		this.setJMenuBar(menuPrincipal);
-		panelSub.setLeftComponent(panelCentral);
-		panelSub.setRightComponent(panelAttribs);
-		this.add(panelSub,BorderLayout.CENTER);
-		this.buildSearchPanel();
+		//panelSub.setLeftComponent(panelCentral);
+		//panelSub.setRightComponent(panelAttribs);
+		//int width = ((int)screenSize.getWidth())-240;
+		//panelSub.setDividerLocation(width);
+		//this.add(panelSub,BorderLayout.CENTER);
+		content.add(panelCentral);
 		
 		//-- Statusbar
-		lblStatusBar = new JLabel(" ");
-		this.add(lblStatusBar,BorderLayout.SOUTH);
+		lblStatusBar = new JLabel("Agregue o Seleccione una persona para comenzar. ");
+		content.add(lblStatusBar,BorderLayout.SOUTH);
+		
+		
+		setContentPane(content);
 	}
 	
 	public void addElementToList(Persona p){
@@ -126,26 +160,75 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		this.dlm.removeElement(p);
 	}
 	
+	public void removeElements(){
+		this.dlm.removeAllElements();
+	}
+	
+	public void clear(){
+		this.removeElements();
+		this.seleccionada = null;
+		this.updatePropertiesPanel();
+	}
+	
+	public Dimension getGraphSize(){
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int width = ((int)screenSize.getWidth())-240;
+	    return new Dimension(width,400);
+	}
+	
 	public void setGraphDisplay(JGraph g){
-		this.panelDer.setLeftComponent(g);
-		g.setPreferredSize(new Dimension(550, 400));
-		g.setMinimumSize(new Dimension(550,400));
+		JScrollPane sc = new JScrollPane(g);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	    int width = ((int)screenSize.getWidth())-440;
+	    
+		this.panelDer.setLeftComponent(sc);
+		g.setPreferredSize(new Dimension(width, 600));
+		g.setMinimumSize(new Dimension(width,600));
+		sc.setPreferredSize(new Dimension(width, 600));
+		sc.setMinimumSize(new Dimension(width,600));
+		
 		g.addGraphSelectionListener(this);
 		g.setAutoResizeGraph(true);
 		g.setEditable(false);
+		g.setEdgeLabelsMovable(false);
+	}
+	
+	public void buildPropertiesPanel(){
+		Object[][] data = {{"","",""}};
+		//String[] cols = {"Atributo","Peso"};
+		seleccionada_nombre 	= new JLabel("Seleccione una persona");
+		seleccionada_atributos 	= new AttributesTable(485,45);
+		seleccionada_atributos.setData(data);
+		JScrollPane tsp = new JScrollPane(seleccionada_atributos);
+		tsp.setBounds(0,10,200,150);
+		
+		panelAttribs.add(seleccionada_nombre,BorderLayout.NORTH);
+		panelAttribs.add(tsp,BorderLayout.CENTER);
+	}
+	
+	public void updatePropertiesPanel(){
+		if(this.seleccionada == null){
+			seleccionada_nombre 	= new JLabel("Seleccione una persona");
+			Object[][] data = {{"","",""}};
+			seleccionada_atributos.setData(data);
+			return;
+		}
+		seleccionada_nombre.setText("Atributos de la Persona: "+this.seleccionada.getNombre());
+		Object[][] data = this.seleccionada.getAtributosTable();
+		seleccionada_atributos.setData(data);
+		seleccionada_atributos.repaint();
 	}
 	
 	public void buildSearchPanel(){
 		search = new JButton("Buscar");
 		search.addActionListener(this);
-		compatibilidad = new JTextField();
-		niveles = new JTextField();
-		
+		compatibilidad = new JTextField("40");
+		niveles = new JTextField("3");
 		this.pnlBusqueda.add(new JLabel("Buscar Amigos"));
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(new JLabel("Porcentaje de Compatibilidad (x/100):"));
 		this.pnlBusqueda.add(compatibilidad);
-		this.pnlBusqueda.add(new JLabel("Niveles de Bï¿½squeda:"));
+		this.pnlBusqueda.add(new JLabel("Niveles de Búsqueda:"));
 		this.pnlBusqueda.add(niveles);
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(search);
@@ -154,13 +237,19 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	
 	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(archivoAbrir)){
+		if(e.getSource().equals(archivoNuevo)){
+			Main.getAgente().clear();
+		} else if(e.getSource().equals(archivoAbrir)){
 			JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(this);
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 		       File file = fc.getSelectedFile();
 		       String path = file.getAbsolutePath();
-		       //-- Mandar a abrir archivo del agente
+		       try {
+		       Grafo.cargaGrafo(path);
+		       } catch(Exception ex){
+		    	   this.lblStatusBar.setText("No fue posible abrir el archivo");
+		       }
 			} 
 		} else if(e.getSource().equals(archivoGuardar)) { 
 			JFileChooser fc = new JFileChooser();
@@ -169,6 +258,11 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	            File file = fc.getSelectedFile();
 	            String path = file.getAbsolutePath();
 	            //-- Mandar a guardar archivo del agente
+	            try {
+	            	Grafo.guardaInformacion(path);
+	 		    } catch(Exception ex){
+	 		    	this.lblStatusBar.setText("No fue posible guardar el archivo");
+	 		    }
 	        } 
 		} else if(e.getSource().equals(archivoCerrar)){
 			System.exit(0);
@@ -184,7 +278,23 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 			} else {
 				this.lblStatusBar.setForeground(Color.black);
 				this.lblStatusBar.setText("Buscando amigos...");
+				Persona sel = this.seleccionada;
 				//-- Buscar amigos con el agente
+				int nivel 		= Integer.parseInt(this.niveles.getText());
+				int error_range = Integer.parseInt(this.niveles.getText());
+				if(nivel > 0 && error_range > 0) {
+					Main.getAgente().buscarAmigos(this.seleccionada, nivel, error_range);
+					this.seleccionada = sel;
+					this.updatePropertiesPanel();
+					this.lblStatusBar.setText("Busqueda Finalizada");
+					
+				} else if(nivel <= 0){
+					this.lblStatusBar.setText("El nivel debe de ser mayor a 0");
+					this.lblStatusBar.setForeground(Color.red);
+				} else if(error_range <= 0){
+					this.lblStatusBar.setText("El nivel de compatibilidad debe de ser mayor a 0");
+					this.lblStatusBar.setForeground(Color.red);
+				}
 			}
 			
 		}else if (e.getSource().equals(simulacionAgregar)){
@@ -196,7 +306,50 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 
 	@Override
 	public void valueChanged(GraphSelectionEvent arg0) {
-		//-- Cambiar seleccion
-		//System.out.println(arg0.getCell().toString());
+		String nombre = arg0.getCell().toString();
+		this.seleccionada = Persona.getPersona(nombre);
+		this.updatePropertiesPanel();
+		
 	}
+	
+	
+	
+	
+	/**
+	 * Clase para darle formato a las celdas de la lista de usuarios
+	 * @author Revolution Software Developers
+	 */
+	private class CellRenderer extends DefaultListCellRenderer {
+		private static final long serialVersionUID = 1L;
+
+		public CellRenderer(){
+			this.setOpaque(true);
+		}
+
+		public Component getListCellRendererComponent(JList list, final Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, 
+                    value, 
+                    index, 
+                    isSelected, 
+                    cellHasFocus);
+			super.setIcon(getIconImage("user.png"));
+			
+			super.setText(value.toString());
+	        super.setBorder(BorderFactory.createMatteBorder(0,0,1,0,new Color(242,242,242)));
+	        
+	        return this;
+		}
+	}
+		
+	/**
+	 * Regresa el ImageIcon de una imagen especificada
+	 * @param filename
+	 * @return image
+	 */
+	public ImageIcon getIconImage(String filename){	
+		ImageIcon image = new ImageIcon(filename);
+		if(image.getImageLoadStatus()==4) return null;
+		return image;
+	}
+	
 }

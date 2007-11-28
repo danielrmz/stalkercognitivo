@@ -1,3 +1,4 @@
+import java.awt.Dimension;
 import java.io.*;
 import java.util.*;
 
@@ -25,6 +26,8 @@ public class Persona {
 	private LinkedList<Persona> blacklist = new LinkedList<Persona>();
 	private LinkedList<Persona> conexiones = new LinkedList<Persona>();
 	
+	public int x = 0;
+	public int y = 0;
 	
 	//-- Constructor
 	public Persona(String nombre){
@@ -33,6 +36,24 @@ public class Persona {
 		this.id = Persona.personas.indexOf(this);
 		Main.getAgente().getGrafo().addVertex(this);
 		Main.getInterfaz().addElementToList(this);
+		Dimension available = Main.getInterfaz().getGraphSize();
+		int x = 1;
+		int y = 1;
+		
+		while(!pointOk(x,y) || x <= 0 || y >= available.height || x + 100>= available.width){
+			x = (int)((float)(Math.random()*available.width-200));
+			y = (int)((float)(Math.random()*available.height));
+		}
+		Main.getAgente()._getGrafo().positionVertexAt(this, x, y);
+	}
+	
+	public static boolean pointOk(int x, int y){
+		for(Persona p : Persona.personas){
+			if(x >= p.x && x <= p.x + 150 && y >= p.y && y <= p.y+40){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public static Persona getPersona(int id){
@@ -44,6 +65,14 @@ public class Persona {
 		return null;
 	}
 
+	public static Persona getPersona(String nombre){
+		for(Persona x : personas){
+			if(x.getNombre().equals(nombre)){
+				return x;
+			}
+		}
+		return null;
+	}
 
 	
 	public static Persona[] getPersonas(){
@@ -56,6 +85,19 @@ public class Persona {
 		}
 		return y;
 	}
+	
+	public Object[][] getAtributosTable(){
+		String[][] ats = new String[this.atributos.size()][3];
+		int i = 0;
+		for(PersonaAtributo a : this.atributos){
+			ats[i][0] = a.getName();
+			ats[i][1] = a.getLastWeight()+"";
+			ats[i][2] = a.getWeight()+"";
+			i++;
+		}
+		return ats;
+	}
+	
 	
 	//-----
 	//-- Funciones de Exists
@@ -136,18 +178,12 @@ public class Persona {
 	public void agregaAmigo(Persona amigo){
 		
 		
-        if (conexiones.size()==0){
-			
-			conexiones.addFirst(amigo);
-			Main.getAgente().getGrafo().addEdge(this,amigo);
-		}
-		else{
+       
 		conexiones.add(amigo);
 
 		Main.getAgente().getGrafo().addEdge(this,amigo);
 
-		}
-        
+		
       //  System.out.println("Agregue a "+amigo.getNombre()+" a la lista "+this.getNombre());
 
 	}
@@ -225,15 +261,14 @@ public class Persona {
 	 * un determinado atributo
 	 */
 	public class PersonaAtributo extends Atributo {
-		private float weight = 0;
-		/**
-		 * Probabilidad de popularidad que ha salido entre los amigos.
-		 */
+		private float weight 	  = 0;
+		private float last_weight = 0;
 		private float popularity = 0;
 		
 		public PersonaAtributo(String name, float weight){
-			this.name = name;
-			this.weight = weight;
+			this.name 		 = name;
+			this.weight 	 = weight;
+			this.last_weight = weight;
 			if(!super.exists(name)){
 				new Atributo(name);
 			}
@@ -251,8 +286,13 @@ public class Persona {
 			return this.weight;
 		}
 		
+		public float getLastWeight(){
+			return this.last_weight;
+		}
+		
 		public void setWeight(float weight){
-			this.weight = weight;
+			this.last_weight = this.weight;
+			this.weight 	 = weight;
 		}
 		
 		public Atributo getInformation(){
