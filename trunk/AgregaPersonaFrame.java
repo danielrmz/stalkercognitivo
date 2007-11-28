@@ -8,17 +8,19 @@ import org.jgraph.event.GraphSelectionListener;
 public class AgregaPersonaFrame extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 9057251280536386344L;
-	private JLabel nombreL;
+	private JLabel nombreL,statusBar;
 	private JTextField nombre;
 	private JButton guardar,limpiar,cancelar;
 	private JComboBox[] atributos;
 	private JLabel[] atributosL;
 	private JTextField[] pesos;
 	private String[] attNames;
+	//private Agente ai;
 	
 	public AgregaPersonaFrame(){
+		//this.ai=ai;
+		
 		//-- Propiedades de la Interfaz
-		this.setSize(400,300);
 		this.setTitle("Administrador de Atributos");
 		this.setLayout(null);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -39,7 +41,7 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 		pesos = new JTextField[Atributo.atributos.size()];
 		attNames = new String[Atributo.atributos.size()+1];
 		
-		attNames[0]=" ";
+		attNames[0]="";
 		for(int j=0; j<Atributo.atributos.size(); j++){
 			attNames[j+1] = Atributo.atributos.get(j).toString();
 		}
@@ -76,13 +78,79 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 		botones.add(cancelar);
 		botones.setBounds(40, x1, 300, 20);
 		
-		this.add(botones);
+		x1+=30; 
 		
+		statusBar = new JLabel();
+		statusBar.setForeground(Color.red);
+		statusBar.setBounds(10, x1, 300, 20);
+		
+		this.add(botones);
+		this.add(statusBar);
+		
+		this.setSize(400, x1+60);
 	}
-
+	
+	private boolean validar(String name,String[] att, String[] attval){
+		boolean sw=true;
+		if(name.equals("")){
+			statusBar.setText("Favor de completar el nombre");
+			return false;
+		}
+		for(int i=0; i<Atributo.atributos.size();i++){
+			if(!att[i].equals("")){
+				sw=false;
+				try{
+					Float.parseFloat(attval[i]);
+				}catch(Exception e){
+					statusBar.setText("Los valores de los pesos deben ser númericos");
+					return false;
+				}
+			}
+		}
+		if(sw){
+			statusBar.setText("Al menos, dar de alta un atributo");
+			return false;
+		}
+		statusBar.setText("");
+		return true;
+	}
+	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(guardar)){
+			String name = nombre.getText();
+			String [] att = new String[Atributo.atributos.size()];
+			String [] attval = new String[Atributo.atributos.size()];
+			for(int i=0; i<Atributo.atributos.size();i++){
+				att[i]= (String)atributos[i].getSelectedItem();
+				attval[i]= pesos[i].getText();
+			}
+			if(validar(name,att,attval)){
+				Persona p = new Persona(name);
+				if(Persona.personas.indexOf(p)!=-1){
+					for(int i=0; i<Atributo.atributos.size();i++){
+						if(!att[i].equals("")){
+							p.setAttribute(att[i], Float.parseFloat(attval[i]));
+						}
+					}
+					Main.getAgente().agregarPersona(p);
+					Main.getInterfaz().repaint();
+					this.dispose();
+				}else{
+					statusBar.setText("Intente otro nombre, pues ese ya está registrado");
+				}
+			}
+		}else if(e.getSource().equals(limpiar)){
+			nombre.setText("");
+			statusBar.setText("");
+			for(int i=0; i<Atributo.atributos.size();i++){
+				atributos[i].setSelectedIndex(0);
+				pesos[i].setText("");
+			}	
+			
+		}else if(e.getSource().equals(cancelar)){
+			this.dispose();
+		}
 		
 	}
 
