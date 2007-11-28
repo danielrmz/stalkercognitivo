@@ -33,10 +33,12 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 		this.setTitle("Administrar atributos de la persona: "+p.getNombre());
 		LinkedList<Persona.PersonaAtributo> atribs = p.getAtributos();
 		for(int i = 0; i < this.pesos.length; i++ ){
+			try {
 			if(atribs.get(i)!=null){
 				this.pesos[i].setText(atribs.get(i).getWeight()+"");
 				this.atributos[i].setSelectedItem(atribs.get(i).getName());
 			}
+			} catch(Exception exe){}
 		}
 	}
 	
