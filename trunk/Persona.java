@@ -243,6 +243,16 @@ public class Persona {
 		
 	}
 	
+	public Persona[] getEnemigos(){
+		Persona[] x = new Persona[this.blacklist.size()];
+		int i = 0;
+		for(Object p : this.blacklist){
+			x[i] = (Persona)p;
+			i++;
+		}
+		return x;
+	}
+	
 	public Persona[] getAmigos(){
 		NeighborIndex ni = new NeighborIndex(Main.getAgente().getGrafo());
 		Object[] vecinos = ni.neighborsOf(this).toArray();

@@ -7,6 +7,7 @@ import org.jgraph.event.GraphSelectionListener;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.File;
+import java.util.LinkedList;
 
 /**
  * Clase de la Interfaz Principal
@@ -23,9 +24,9 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 					  simulacionBorrar, simulacionAtributos,
 					  ayudaInfo;
 	private JList amigos;
-	private JPanel pnlGrafo,pnlBusqueda, panelAttribs;
+	private JPanel pnlGrafo,pnlBusqueda, panelAttribs,pnlResultados;
 	private JSplitPane panelSub, panelCentral,panelDer;
-	private JButton search;
+	private JButton search, blacklist, edit;
 	private JTextField compatibilidad,niveles;
 	private JLabel lblStatusBar;
 
@@ -99,6 +100,27 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		amigos.setFixedCellHeight(20);
 		amigos.setCellRenderer(new CellRenderer());
 		
+		amigos.addMouseListener(new MouseListener(){
+
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount() == 1){
+					int index = amigos.locationToIndex(e.getPoint());
+				    ListModel dlm = amigos.getModel();
+				    Object item = dlm.getElementAt(index);
+				    amigos.ensureIndexIsVisible(index);
+				    seleccionada = (Persona)item;
+				    updatePropertiesPanel();
+				   
+				}
+			}
+
+			public void mousePressed(MouseEvent arg0) {}
+			public void mouseReleased(MouseEvent arg0) {}
+			public void mouseEntered(MouseEvent arg0) {}
+			public void mouseExited(MouseEvent arg0) {}
+        	
+        });
+		
 		JScrollPane jsam = new JScrollPane(amigos);
 		jsam.setPreferredSize(new Dimension(190, 600));
 		jsam.setMinimumSize(new Dimension(190, 600));
@@ -106,9 +128,9 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		
 		//-- Paneles Principales
 		panelAttribs = new JPanel(new BorderLayout());
-		panelAttribs.setPreferredSize(new Dimension(150, 150));
-		panelAttribs.setMinimumSize(new Dimension(150,150));
-		panelAttribs.setMaximumSize(new Dimension(150,150));
+		panelAttribs.setPreferredSize(new Dimension(150, 200));
+		panelAttribs.setMinimumSize(new Dimension(150,200));
+		panelAttribs.setMaximumSize(new Dimension(150,200));
 		
 		pnlGrafo = new JPanel();
 		pnlGrafo.setPreferredSize(new Dimension(550, 600));
@@ -116,15 +138,21 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		pnlGrafo.add(new JLabel());
 		
 		pnlBusqueda = new JPanel(new GridLayout(4,2));
-		pnlBusqueda.setPreferredSize(new Dimension(550, 150));
-		pnlBusqueda.setMinimumSize(new Dimension(550, 150));
+		pnlBusqueda.setPreferredSize(new Dimension(550, 200));
+		pnlBusqueda.setMinimumSize(new Dimension(550, 200));
 		
 		
 		this.buildSearchPanel();
 		this.buildPropertiesPanel();
 		
+		pnlResultados = new JPanel(new BorderLayout());
 		
-		panelSub.setLeftComponent(pnlBusqueda);
+		JTabbedPane jtp = new JTabbedPane();
+		jtp.addTab("Busqueda", pnlBusqueda);
+    	jtp.addTab("Resultados", pnlResultados);
+    	
+		panelSub.setLeftComponent(jtp);
+		//panelSub.setLeftComponent(pnlBusqueda);
 		panelSub.setRightComponent(panelAttribs);
 		
 		panelDer.setLeftComponent(pnlGrafo);
@@ -137,11 +165,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		
 		//-- Agregar al canvas principal
 		this.setJMenuBar(menuPrincipal);
-		//panelSub.setLeftComponent(panelCentral);
-		//panelSub.setRightComponent(panelAttribs);
-		//int width = ((int)screenSize.getWidth())-240;
-		//panelSub.setDividerLocation(width);
-		//this.add(panelSub,BorderLayout.CENTER);
+		
 		content.add(panelCentral);
 		
 		//-- Statusbar
@@ -182,10 +206,10 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 	    int width = ((int)screenSize.getWidth())-440;
 	    
 		this.panelDer.setLeftComponent(sc);
-		g.setPreferredSize(new Dimension(width, 600));
-		g.setMinimumSize(new Dimension(width,600));
-		sc.setPreferredSize(new Dimension(width, 600));
-		sc.setMinimumSize(new Dimension(width,600));
+		g.setPreferredSize(new Dimension(width, 550));
+		g.setMinimumSize(new Dimension(width,550));
+		sc.setPreferredSize(new Dimension(width, 550));
+		sc.setMinimumSize(new Dimension(width,550));
 		
 		g.addGraphSelectionListener(this);
 		g.setAutoResizeGraph(true);
@@ -204,6 +228,17 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		
 		panelAttribs.add(seleccionada_nombre,BorderLayout.NORTH);
 		panelAttribs.add(tsp,BorderLayout.CENTER);
+		
+		
+		blacklist = new JButton("Lista Negra");
+		blacklist.addActionListener(this);
+		edit = new JButton("Editar");
+		edit.addActionListener(this);
+		JPanel comp = new JPanel(new FlowLayout());
+		comp.add(blacklist);
+		comp.add(edit);
+		panelAttribs.add(comp,BorderLayout.SOUTH);
+		
 	}
 	
 	public void updatePropertiesPanel(){
@@ -283,11 +318,27 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 				int nivel 		= Integer.parseInt(this.niveles.getText());
 				int error_range = Integer.parseInt(this.niveles.getText());
 				if(nivel > 0 && error_range > 0) {
-					Main.getAgente().buscarAmigos(this.seleccionada, nivel, error_range);
+					LinkedList<Persona> results = Main.getAgente().buscarAmigos(this.seleccionada, nivel, error_range);
 					this.seleccionada = sel;
 					this.updatePropertiesPanel();
-					this.lblStatusBar.setText("Busqueda Finalizada");
-					
+					this.lblStatusBar.setText("Busqueda Finalizada: "+results.size()+" Personas encontradas.");
+					if(results.size() == 0){
+						JOptionPane.showMessageDialog(this,
+							    "No se encontraron personas",
+							    "Resultados",
+							    JOptionPane.ERROR_MESSAGE);
+					} else {
+						String cols[] = {"Persona"};
+						Object data[][] = new Object[results.size()][1];
+						int i = 0;
+						for(Persona p : results){
+							data[i][0] = p.getNombre();
+							i++;
+						}
+						pnlResultados.removeAll();
+						pnlResultados.add(new JTable(data,cols));
+						pnlResultados.repaint();
+					}
 				} else if(nivel <= 0){
 					this.lblStatusBar.setText("El nivel debe de ser mayor a 0");
 					this.lblStatusBar.setForeground(Color.red);
@@ -300,6 +351,19 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		}else if (e.getSource().equals(simulacionAgregar)){
 			AgregaPersonaFrame apf = new AgregaPersonaFrame();
 			apf.setVisible(true);
+		} else if(e.getSource().equals(blacklist)){
+			if(this.seleccionada == null){
+				this.lblStatusBar.setText("Seleccione una persona sobre la cual realizar la busqueda");
+				this.lblStatusBar.setForeground(Color.red);
+			} else {
+				BlackListFrame blf = new BlackListFrame(this.seleccionada);
+				blf.setVisible(true);
+			}
+		} else if(e.getSource().equals(edit)){
+			if(this.seleccionada == null){
+				this.lblStatusBar.setText("Seleccione una persona sobre la cual realizar la busqueda");
+				this.lblStatusBar.setForeground(Color.red);
+			}
 		}
 	
 	}

@@ -133,7 +133,9 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 							p.setAttribute(att[i], Float.parseFloat(attval[i]));
 						}
 					}
-					Main.getAgente().agregarPersona(p);
+					if(Persona.personas.size() > 1){
+						Main.getAgente().agregarPersona(p);
+					}
 					Main.getInterfaz().repaint();
 					this.dispose();
 				}else{
