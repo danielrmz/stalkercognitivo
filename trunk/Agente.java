@@ -29,7 +29,8 @@ public class Agente {
 	//-- Metodo temporal para agregar datos de prueba
 	public static void defaults(Agente x){
 		// Personas actuales
-		Persona ricardo = new Persona("Ricardo");
+		Grafo.cargaGrafo("estadoAct.txt");
+		/**Persona ricardo = new Persona("Ricardo");
 		Persona angel 	= new Persona("Angel");
 		Persona memo 	= new Persona("Guillermo");
 		Persona pedro 	= new Persona("Pedro");
@@ -73,35 +74,9 @@ public class Agente {
 		cynthia.agregaEnemigo(angel); 
 		for(Persona persona : Persona.personas){
 			System.out.println(persona.getNombre()+" :: "+persona.atrToString());
-		}
-	}
-	/**
-	//-- Main
-	public static void main(String[] args) {
-		Agente.ag = new Agente();
-		defaults(Agente.ag);
-		try{
-			 cargaGrafo();
-			 
-			}
-			catch(Exception io){
-			   io.toString();	
-			
-			}
-		System.out.println("Inicial: "+Agente.ag.graph.g.toString());
-		System.out.println(Persona.personas.getFirst().atrToString());
-		Agente.ag.buscarAmigos(Persona.personas.getFirst());
-		System.out.println(Persona.personas.getFirst().atrToString());
-		System.out.println("Final: "+Agente.ag.graph.g.toString());
+		}**/
 		
-		try{
-			guardaInformacion();
-			
-		}
-		catch(Exception e){
-			e.toString();
-		}
-	}**/
+	}
 	
 	//-- Constructor
 	public Agente(){ 
@@ -116,6 +91,17 @@ public class Agente {
 		return this.graph.getDisplay();
 	}
 	
+	public Grafo _getGrafo(){
+		return this.graph;
+	}
+	
+	public void clear(){
+		this.graph = new Grafo(new Dimension( 530, 320 ));
+		Main.getInterfaz().setGraphDisplay(this.graph.getDisplay());
+		Main.getInterfaz().clear();
+		Persona.personas.clear();
+		
+	}
 
 	public void inicializarMatriz(float[][] promedioAtt){
 		for(int i=0; i<promedioAtt.length;i++){
@@ -124,7 +110,7 @@ public class Agente {
 			}
 		}
 	}
-	public void buscarPersona(Persona p, Queue<Vecino> pila,LinkedList<String> searched){
+	public void buscarPersona(Persona p, Queue<Vecino> pila,LinkedList<String> searched, LinkedList<Persona> found){
 		float promedioAtt[][] = new float[p.getAtributos().size()][2]; // 0 - sumatoria , 1 - cantidad de hits
 		inicializarMatriz(promedioAtt);
 		while(!pila.isEmpty()){
@@ -154,6 +140,10 @@ public class Agente {
 			}
 			Persona[] vecinos = candidato.getP().getAmigos();
 			
+			if(result){ //Guardar los que encontro
+				found.add(candidato.getP());
+			}
+			
 			if(!result && !p.equals(candidato.getP())){
 				//-- Si no hay conexion con el amigo, intentar un nivel mas a partir del amigo, para cersiorarse de 
 				//-- que no haya un subgrupo con los mismos gustos.
@@ -170,13 +160,17 @@ public class Agente {
 	
 	
 	//-- Metodo que busca amigos con caracteristicas similares
-	public void buscarAmigos(Persona p){
+	public LinkedList<Persona> buscarAmigos(Persona p, int nivel, int error_range){
 		NeighborIndex<Persona,DefaultEdge> ni = new NeighborIndex<Persona,DefaultEdge>(this.getGrafo());
-
+		Agente.NIVEL = nivel;
+		Agente.ERROR_RANGE = 100-error_range;
+		
 		Object[] vecinos = ni.neighborsOf(p).toArray();
 		Queue<Vecino> pila = new Queue<Vecino>();
 		LinkedList<String> 	  searched = new LinkedList<String>();
+		LinkedList<Persona> 	  found = new LinkedList<Persona>();
 		
+		searched.add(p.getNombre());
 		for(Object vecino: vecinos){
 			Object[] candidatos = ni.neighborsOf((Persona)vecino).toArray();
 			for(Object candidato: candidatos){
@@ -187,8 +181,8 @@ public class Agente {
 			}
 		}
 		
-		//System.out.println(pila.toString());
-		buscarPersona(p, pila,searched);
+		buscarPersona(p, pila,searched,found);
+		return found;
 	}
 	
 	/*
@@ -292,161 +286,4 @@ public class Agente {
 		this.graph.getGraph().removeEdge(this.graph.getGraph().getEdge(a,b));
 	}
 	
-	//-- Guarda la informacion en un archivo
-	public static void guardaInformacion() throws IOException{
-		
-		PrintWriter salida = new PrintWriter(new FileWriter("estadoAct.txt"));
-		//BufferedReader ent = new BufferedReader(new FileReader("estadoAct.txt"));
-		
-		
-		
-		for(int i=0; i<Persona.personas.size(); i++){
-		      
-		
-			 salida.print(Persona.personas.get(i).getNombre()+"/");
-			 salida.flush();
-			
-		}
-		salida.println();
-		
-		for(int i=0; i<Persona.personas.size(); i++){
-			 if(Persona.personas.get(i).wlToString().equals("")){
-				 salida.print("@/");
-			 }
-			 else{
-		      
-		     salida.print(Persona.personas.get(i).wlToString()+"/");
-			 }
-             salida.flush();
-			
-		}
-		salida.println();
-		for(int i=0; i<Persona.personas.size(); i++){
-		      
-			 if(Persona.personas.get(i).blToString().equals("")){
-				 salida.print("@/");
-			 }
-			 else{
-			 salida.print(Persona.personas.get(i).blToString()+"/");
-			 }
-			 salida.flush();
-			
-		}
-		salida.println();
-		for(int i=0; i<Persona.personas.size(); i++){
-		      
-		
-	
-			 salida.print(Persona.personas.get(i).atrToString()+"/");
-			 salida.flush();
-			
-		}
-		
-		
-		salida.close();
-		
-	}
-	
-	public static Persona encuentraElemento(String nombre){
-		
-		for(int i=0; i<Persona.personas.size();i++){
-			if(Persona.personas.get(i).getNombre().equals(nombre)){
-				return Persona.personas.get(i);
-			}
-				
-		}
-		return null;
-	}
-	
-	public static void cargaGrafo() throws Exception{
-		  
-		BufferedReader ent = new BufferedReader(new FileReader("grafo.txt"));
-		
-		String s = ent.readLine();
-		StringTokenizer st= new StringTokenizer(s,"/");
-		int para=st.countTokens();
-		while(st.hasMoreElements()){
-		 String sub=(st.nextToken());	
-		    Persona i = new Persona(sub);
-		}
-		
-		s=ent.readLine();
-	    StringTokenizer st2=new StringTokenizer(s,"/");
-	    
-	    int size= st2.countTokens();
-	     Object org[][]=new Object[(size*size)-1][2];
-	     int u=0;
-		for(int i=0; i<9; i++){
-			int z=i;
-		  StringTokenizer sub2=new StringTokenizer(st2.nextToken(),",");	
-		  	 while(sub2.hasMoreTokens()){
-		  		 
-		  		  org[u][0]=sub2.nextToken();
-		  		  org[u][1]=z;
-		  		  u++;
-		  	 }
-		}
-		
-		/*for(int k1=0; k1<u; k1++){
-			System.out.println(""+org[k1][0]+" "+org[k1][1]);
-		}*/
-		
-		
-        for(int k2=0; k2<u; k2++){
-		
-         String k3=(""+org[k2][0]);
-         String k4=(""+org[k2][1]);
-         int test2=Integer.parseInt(k4);
-         Persona test = encuentraElemento(k3);
-         //System.out.println(test.getNombre()+" "+test2);
-		 Persona.personas.get(test2).agregaAmigo(test);
-		
-        }
-		
-	    s=ent.readLine();
-	    StringTokenizer st3=new StringTokenizer(s,"/");
-	    int i=0;
-	    while(st3.hasMoreElements()){
-	       String c2=st3.nextToken();
-	       
-	       if(!(c2.equals("@"))){
-	    	   Persona x=encuentraElemento(c2);
-	    	   Persona.personas.get(i).agregaEnemigo(x);
-	       }
-	       i++;
-	    }
-	    
-	    s=ent.readLine();
-	    int cont=0;
-	    
-	    
-	    StringTokenizer st4=new StringTokenizer(s,"/");
-	    //String sq=st4.nextToken();
-	   
-	    while(st4.hasMoreElements()){
-	    StringTokenizer sub4=new StringTokenizer(st4.nextToken(),",");
-	    String a="";
-	    
-	     while(sub4.hasMoreElements()){
-	    	String z=sub4.nextToken();
-	    	
-	    	if(!(z.equals("0.0"))){
-	    		a+=z+"|";
-	    	}
-	   
-	    }
-	    //System.out.println(a); 
-	    StringTokenizer ultimo=new StringTokenizer(a,"|");
-	     
-	    for(int ult=1; ult<=3; ult++){
-	    	
-	    	Persona.personas.get(cont).setAttribute(ultimo.nextToken(), Float.parseFloat(ultimo.nextToken()));
-	      	
-	    }
-	    
-	    cont++;
-	    }
-		ent.close();
-	}
-
 }
