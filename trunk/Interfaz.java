@@ -67,7 +67,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("Simulaciï¿½n");
+		simulacion = new JMenu("Simulación");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
@@ -364,6 +364,9 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 			if(this.seleccionada == null){
 				this.lblStatusBar.setText("Seleccione una persona sobre la cual realizar la busqueda");
 				this.lblStatusBar.setForeground(Color.red);
+			} else {
+				AgregaPersonaFrame x = new AgregaPersonaFrame(this.seleccionada);
+				x.setVisible(true);
 			}
 		}
 	
