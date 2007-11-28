@@ -51,11 +51,12 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("Simulaciï¿½n");
+		simulacion = new JMenu("Simulación");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionBuscar = new JMenuItem ("Buscar Amigos");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
+		simulacionAgregar.addActionListener(this);
 		
 		simulacion.add(simulacionAgregar);
 		simulacion.add(simulacionBorrar);
@@ -186,6 +187,9 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 				//-- Buscar amigos con el agente
 			}
 			
+		}else if (e.getSource().equals(simulacionAgregar)){
+			AgregaPersonaFrame apf = new AgregaPersonaFrame();
+			apf.setVisible(true);
 		}
 	
 	}
