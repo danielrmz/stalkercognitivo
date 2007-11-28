@@ -12,7 +12,7 @@ import java.util.LinkedList;
 /**
  * Clase de la Interfaz Principal
  * 
- * @author Equipo 6 Cynthia Treviño, Ricardo Magallanes, Daniel Ramirez
+ * @author Equipo 6 Cynthia Treviï¿½o, Ricardo Magallanes, Daniel Ramirez
  */
 public class Interfaz extends JFrame implements ActionListener,GraphSelectionListener {
 
@@ -67,7 +67,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		archivo.add(archivoGuardar);
 		archivo.add(archivoCerrar);
 		
-		simulacion = new JMenu("Simulación");
+		simulacion = new JMenu("Simulaciï¿½n");
 		simulacionAgregar = new JMenuItem ("Agregar Persona");
 		simulacionBorrar = new JMenuItem ("Borrar Persona");
 		simulacionAtributos = new JMenuItem ("Administrar Atributos");
@@ -77,6 +77,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		simulacion.add(simulacionBorrar);
 		simulacion.add(simulacionAtributos);
 		
+		simulacionAtributos.addActionListener(this);
 		
 		
 		ayuda = new JMenu("Ayuda");
@@ -263,7 +264,7 @@ public class Interfaz extends JFrame implements ActionListener,GraphSelectionLis
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(new JLabel("Porcentaje de Compatibilidad (x/100):"));
 		this.pnlBusqueda.add(compatibilidad);
-		this.pnlBusqueda.add(new JLabel("Niveles de Búsqueda:"));
+		this.pnlBusqueda.add(new JLabel("Niveles de Bï¿½squeda:"));
 		this.pnlBusqueda.add(niveles);
 		this.pnlBusqueda.add(new JLabel());
 		this.pnlBusqueda.add(search);
