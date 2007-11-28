@@ -16,25 +16,31 @@ public class Main {
 	 */
 	private static Agente 	ae; //-- Singleton del Agente
 	
-	
+	/**
+	 * Trae el agente
+	 * @return
+	 */
 	public static Agente getAgente(){
 		return Main.ae;
 	}
 	
+	/**
+	 * Trae la interfaz
+	 * @return
+	 */
 	public static Interfaz getInterfaz(){
 		return Main.ie;
 	}
 	
+	
 	public static void main(String[] args) {
+		//-- Inicializar componentes principales
 		ie = new Interfaz();
 		ae = new Agente();
 		
-		Agente.defaults(ae);
-		
+		//-- Visibilidad al display y asignarle la grafica
 		ie.setVisible(true);
 		ie.setGraphDisplay(ae.getDisplay());
-	
-
 		
 	}
 
