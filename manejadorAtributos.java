@@ -28,7 +28,7 @@ public class manejadorAtributos extends JFrame implements ActionListener {
 		a=new JLabel("A continuación se muestran los atributos disponibles:\n");
 		b=new JLabel("Nombre del atributo:");
 		c=new JLabel("Agregar Atributo-");
-		d=new JLabel("El atributo se ha agregado exitosamente");
+		d=new JLabel("El atributo se ha agregado exitosamente.");
     	this.add(a);
 		Insets inset=this.getInsets();
 		Dimension x =a.getPreferredSize();
