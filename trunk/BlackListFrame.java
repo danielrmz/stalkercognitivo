@@ -83,14 +83,14 @@ public class BlackListFrame extends JFrame implements ActionListener {
 
 	public void cargaAmigos(){
 		for(Persona p : this.base.getAmigos()){
-			if(!this.base.esEnemigo(p) && !p.getNombre().equals(""))
+			if(p!=null && !this.base.esEnemigo(p) && !p.getNombre().equals(""))
 			this.dlmAceptados.addElement(p);
 		}
 	}
 
 	public void cargaEnemigos(){
 		for(Persona p : this.base.getEnemigos()){
-			if(!p.getNombre().equals("")) {
+			if(p!=null && !p.getNombre().equals("")) {
 				this.dlmBlacklist.addElement(p);
 			}
 		}
