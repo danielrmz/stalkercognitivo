@@ -1,0 +1,4 @@
+Ricardo/Angel/Guillermo/Pedro/Damaris/Leonidas/Marin/Daniel/Cynthia/
+Cynthia,Pedro,/Cynthia,Pedro,/Daniel,/Ricardo,Angel,Damaris,Leonidas,/Pedro,Leonidas,/Marin,Damaris,Pedro,/Leonidas,/Cynthia,Guillermo,/Daniel,Ricardo,Angel,/
+@/@/@/@/@/@/@/@/Angel/
+Comida Spicy,90.02632,0.0,Comida China,77.14162,0.0,Soccer,35.363033,0.0,/Comida Spicy,15.421936,0.0,Comida China,22.269142,0.0,Soccer,8.530963,0.0,/Comida Spicy,44.82451,0.0,Comida China,4.725364,0.0,Soccer,68.629654,0.0,/Comida Spicy,33.719738,0.0,Comida China,97.292175,0.0,Soccer,58.41423,0.0,/Comida Spicy,96.63797,0.0,Comida China,60.07117,0.0,Soccer,32.450245,0.0,/Comida Spicy,22.033514,0.0,Comida China,43.990326,0.0,Soccer,68.67829,0.0,/Comida Spicy,90.66832,0.0,Comida China,95.673325,0.0,Soccer,43.81011,0.0,/Comida Spicy,78.83725,0.0,Comida China,28.122868,0.0,Soccer,76.38589,0.0,/Comida Spicy,59.620113,0.0,Comida China,92.78921,0.0,Soccer,47.667747,0.0,/
