@@ -201,7 +201,6 @@ public class Grafo {
 	    	}
 	   
 	    }
-	    //System.out.println(a); 
 	    StringTokenizer ultimo=new StringTokenizer(a,"|");
 	     
 	    for(int ult=1; ult<=3; ult++){
