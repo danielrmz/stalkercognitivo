@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.util.LinkedList;
+
 import org.jgraph.*;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
@@ -15,7 +17,20 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 	private JLabel[] atributosL;
 	private JTextField[] pesos;
 	private String[] attNames;
-	//private Agente ai;
+	private Persona base;//-- Persona base, si se va a editar.
+	
+	//-- Constructor para editar
+	public AgregaPersonaFrame(Persona p){
+		this(); //Cargar elementos principales
+		this.nombre.setText(p.getNombre());
+		this.base = p;
+		this.setTitle("Administrar atributos de la persona: "+p.getNombre());
+		LinkedList<Persona.PersonaAtributo> atribs = p.getAtributos();
+		for(int i = 0; i < this.pesos.length; i++ ){
+			this.pesos[i].setText(atribs.get(i).getWeight()+"");
+			this.atributos[i].setSelectedItem(atribs.get(i).getName());
+		}
+	}
 	
 	public AgregaPersonaFrame(){
 		//this.ai=ai;
@@ -126,20 +141,34 @@ public class AgregaPersonaFrame extends JFrame implements ActionListener {
 				attval[i]= pesos[i].getText();
 			}
 			if(validar(name,att,attval)){
-				Persona p = new Persona(name);
-				if(Persona.personas.indexOf(p)!=-1){
-					for(int i=0; i<Atributo.atributos.size();i++){
-						if(!att[i].equals("")){
-							p.setAttribute(att[i], Float.parseFloat(attval[i]));
+				if(this.base == null){
+					Persona p = new Persona(name);
+					if(Persona.personas.indexOf(p)!=-1 && this.base == null){ //-- nuevo
+						for(int i=0; i<Atributo.atributos.size();i++){
+							if(!att[i].equals("")){
+								p.setAttribute(att[i], Float.parseFloat(attval[i]));
+							}
 						}
+						if(Persona.personas.size() > 1){
+							Main.getAgente().agregarPersona(p);
+						}
+						Main.getInterfaz().repaint();
+						this.dispose();
+					} else{
+						statusBar.setText("Intente otro nombre, pues ese ya está registrado");
 					}
-					if(Persona.personas.size() > 1){
-						Main.getAgente().agregarPersona(p);
+				} else { //-- Edicion.
+					
+					Persona persona_registrada = Persona.getPersona(this.base.getNombre());
+					persona_registrada.setNombre(name);
+					int i = 0;
+					for(String atributo : att){
+						this.base.getAtributo(atributo).setWeight(Float.parseFloat(attval[i]));
+						i++;
 					}
+					Main.getInterfaz().updatePropertiesPanel();
 					Main.getInterfaz().repaint();
 					this.dispose();
-				}else{
-					statusBar.setText("Intente otro nombre, pues ese ya está registrado");
 				}
 			}
 		}else if(e.getSource().equals(limpiar)){
